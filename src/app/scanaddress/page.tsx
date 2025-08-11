@@ -838,70 +838,80 @@ export default function WalletScanner() {
               >
                 <h3 className="text-xl font-bold mb-6 text-white text-center">How It Works</h3>
                 
-                <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-                  <motion.div
-                    whileHover={{ y: -5 }}
-                    className="flex-1 max-w-xs bg-black/30 backdrop-blur-sm p-6 rounded-2xl border border-white/10"
-                  >
-                    <div className="flex items-center mb-3">
-                      <div className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center mr-3">
-                        <span className="font-bold">1</span>
+                <div className="w-full mb-12">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <motion.div
+                      whileHover={{ y: -5 }}
+                      className="w-full bg-black/30 backdrop-blur-sm p-6 rounded-2xl border border-white/10"
+                    >
+                      <div className="flex items-center mb-3">
+                        <div className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center mr-3">
+                          <span className="font-bold">1</span>
+                        </div>
+                        <h4 className="font-bold">Enter Address</h4>
                       </div>
-                      <h4 className="font-bold">Enter Address</h4>
-                    </div>
-                    <p className="text-gray-300 text-sm">
-                      Paste any Injective wallet address into the scanner
-                    </p>
-                  </motion.div>
+                      <p className="text-gray-300 text-sm">
+                        Paste any Injective wallet address into the scanner
+                      </p>
+                    </motion.div>
 
-                  <motion.div
-                    whileHover={{ y: -5 }}
-                    className="flex-1 max-w-xs bg-black/30 backdrop-blur-sm p-6 rounded-2xl border border-white/10"
-                  >
-                    <div className="flex items-center mb-3">
-                      <div className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center mr-3">
-                        <span className="font-bold">2</span>
+                    <motion.div
+                      whileHover={{ y: -5 }}
+                      className="w-full bg-black/30 backdrop-blur-sm p-6 rounded-2xl border border-white/10"
+                    >
+                      <div className="flex items-center mb-3">
+                        <div className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center mr-3">
+                          <span className="font-bold">2</span>
+                        </div>
+                        <h4 className="font-bold">Scan Transactions</h4>
                       </div>
-                      <h4 className="font-bold">Scan Transactions</h4>
-                    </div>
-                    <p className="text-gray-300 text-sm">
-                      We analyze all transactions and token movements
-                    </p>
-                  </motion.div>
+                      <p className="text-gray-300 text-sm">
+                        We analyze all transactions and token movements
+                      </p>
+                    </motion.div>
 
-                  <motion.div
-                    whileHover={{ y: -5 }}
-                    className="flex-1 max-w-xs bg-black/30 backdrop-blur-sm p-6 rounded-2xl border border-white/10"
-                  >
-                    <div className="flex items-center mb-3">
-                      <div className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center mr-3">
-                        <span className="font-bold">3</span>
+                    <motion.div
+                      whileHover={{ y: -5 }}
+                      className="w-full bg-black/30 backdrop-blur-sm p-6 rounded-2xl border border-white/10"
+                    >
+                      <div className="flex items-center mb-3">
+                        <div className="w-8 h-8 rounded-full bg-white text-black flex items-center justify-center mr-3">
+                          <span className="font-bold">3</span>
+                        </div>
+                        <h4 className="font-bold">Get Results</h4>
                       </div>
-                      <h4 className="font-bold">Get Results</h4>
-                    </div>
-                    <p className="text-gray-300 text-sm">
-                      View detailed analytics and security assessment
-                    </p>
-                  </motion.div>
+                      <p className="text-gray-300 text-sm">
+                        View detailed analytics and security assessment
+                      </p>
+                    </motion.div>
+                  </div>
                 </div>
 
-                <div className="max-w-2xl mx-auto mb-16 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-6 backdrop-blur-sm">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
-                      <h3 className="text-lg font-bold">Network Status</h3>  
-                    </div>
-                    <p className="text-2xl font-bold tracking-tight">
+                <div className="w-full mb-16">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="bg-black/30 border border-white/10 rounded-xl p-6 backdrop-blur-sm">
+                      <div className="flex items-center gap-3 mb-4">
+                        <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse"></div>
+                        <h3 className="text-lg font-bold">Network Status</h3>  
+                      </div>
+                      <p className="text-2xl font-bold tracking-tight">
                         Operational
-                    </p>
-                  </div>
+                      </p>
+                    </div>
 
-                  <div className="bg-white/5 border border-white/10 rounded-xl p-6 backdrop-blur-sm">
-                    <h3 className="text-lg font-bold mb-4">Blockchain Data</h3>
-                    <p className="text-2xl font-bold tracking-tight">
-                      {blockHeight ? blockHeight.toLocaleString() : '--'}
-                    </p>
-                    
+                    <div className="bg-black/30 border border-white/10 rounded-xl p-6 backdrop-blur-sm">
+                      <h3 className="text-lg font-bold mb-4">Blockchain Data</h3>
+                      <p className="text-2xl font-bold tracking-tight">
+                        {blockHeight ? blockHeight.toLocaleString() : '--'}
+                      </p>
+                    </div>
+
+                    <div className="bg-black/30 border border-white/10 rounded-xl p-6 backdrop-blur-sm">
+                      <h3 className="text-lg font-bold mb-4">Scammers Project</h3>
+                      <p className="text-2xl font-bold tracking-tight">
+                        63
+                      </p>
+                    </div>
                   </div>
                 </div>
               </motion.div>
