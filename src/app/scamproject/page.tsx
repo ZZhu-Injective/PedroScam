@@ -1,289 +1,327 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
-import Head from 'next/head';
-import Image from 'next/image';
-import { motion } from 'framer-motion';
-import Button from '@/components/basic_button';
-import { toPng } from 'html-to-image';
+import { motion } from "framer-motion";
+import Head from "next/head";
+import Image from "next/image";
+import { useState, useEffect } from 'react';
 
-const elements = {
-  eyes: [
-    { image: '' },
-    { image: '/eyes/1.png' },
-    { image: '/eyes/2.png' },
-    { image: '/eyes/3.png' },
-    { image: '/eyes/4.png' },
-    { image: '/eyes/5.png' },
-    { image: '/eyes/6.png' },
-    { image: '/eyes/7.png' },
-    { image: '/eyes/8.png' },
-    { image: '/eyes/9.png' },
-    { image: '/eyes/10.png' },
-    { image: '/eyes/11.png' },
-    { image: '/eyes/12.png' },
-    { image: '/eyes/13.png' },
-    { image: '/eyes/14.png' },
-    { image: '/eyes/15.png' },
-    { image: '/eyes/16.png' },
-    { image: '/eyes/17.png' },
-    { image: '/eyes/20.png' },
-    { image: '/eyes/21.png' },
-  ],
-  outfit: [
-    { image: '' },
-    { image: '/outfit/1.png' },
-    { image: '/outfit/2.png' },
-    { image: '/outfit/3.png' },
-    { image: '/outfit/4.png' },
-    { image: '/outfit/5.png' },
-    { image: '/outfit/6.png' },
-    { image: '/outfit/7.png' },
-    { image: '/outfit/8.png' },
-    { image: '/outfit/9.png' },
-    { image: '/outfit/10.png' },
-    { image: '/outfit/11.png' },
-    { image: '/outfit/12.png' },
-    { image: '/outfit/13.png' },
-    { image: '/outfit/14.png' },
-    { image: '/outfit/15.png' },
-    { image: '/outfit/16.png' },
-    { image: '/outfit/17.png' },
-    { image: '/outfit/18.png' },
-    { image: '/outfit/19.png' },
-  ],
-  hat: [
-    { image: '' },
-    { image: '/hat/1.png' },
-    { image: '/hat/2.png' },
-    { image: '/hat/3.png' },
-    { image: '/hat/4.png' },
-    { image: '/hat/5.png' },
-    { image: '/hat/6.png' },
-    { image: '/hat/7.png' },
-    { image: '/hat/8.png' },
-    { image: '/hat/9.png' },
-    { image: '/hat/10.png' },
-    { image: '/hat/11.png' },
-    { image: '/hat/12.png' },
-    { image: '/hat/13.png' },
-    { image: '/hat/14.png' },
-    { image: '/hat/15.png' },
-    { image: '/hat/16.png' },
-    { image: '/hat/17.png' },
-    { image: '/hat/18.png' },
-    { image: '/hat/19.png' },
-  ],
-  accessory: [
-    { image: '' },
-    { image: '/attribute/1.png' },
-    { image: '/attribute/2.png' },
-    { image: '/attribute/3.png' },
-    { image: '/attribute/4.png' },
-    { image: '/attribute/5.png' },
-    { image: '/attribute/6.png' },
-    { image: '/attribute/7.png' },
-    { image: '/attribute/8.png' },
-    { image: '/attribute/9.png' },
-    { image: '/attribute/10.png' },
-    { image: '/attribute/11.png' },
-    { image: '/attribute/12.png' },
-    { image: '/attribute/13.png' },
-    { image: '/attribute/14.png' },
-    { image: '/attribute/15.png' },
-    { image: '/attribute/16.png' },
-    { image: '/attribute/17.png' },
-    { image: '/attribute/18.png' },
-    { image: '/attribute/19.png' },
-  ],
-  mouth: [
-    { image: '' },
-    { image: '/mouth/1.png' },
-    { image: '/mouth/2.png' },
-  ],
-};
+interface ScamProject {
+  id: string;
+  name: string;
+  imageUrl: string;
+  category: string;
+  dateReported: string;
+  reportedBy: string;
+  description: string;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  website?: string;
+  socials?: {
+    twitter?: string;
+    telegram?: string;
+    discord?: string;
+  };
+  chain: string;
+  contracts: string[];
+}
 
-const backgroundColors = [
-  { name: 'Soft White', value: '#f8f9fa' },
-  { name: 'Pearl', value: '#f0f0f0' },
-  { name: 'Light Gray', value: '#e0e0e0' },
-  { name: 'Lavender Mist', value: '#e6e6fa' },
-  { name: 'Powder Blue', value: '#b0e0e6' },
-  { name: 'Mint Cream', value: '#f5fffa' },
-  { name: 'Alice Blue', value: '#f0f8ff' },
-  { name: 'Honeydew', value: '#f0fff0' },
-  { name: 'Seashell', value: '#fff5ee' },
-  { name: 'Linen', value: '#faf0e6' },
-  { name: 'Light Cyan', value: '#e0ffff' },
-  { name: 'Pale Turquoise', value: '#afeeee' },
-  { name: 'Light Sky Blue', value: '#87cefa' },
-  { name: 'Light Steel Blue', value: '#b0c4de' },
-  { name: 'Pale Lavender', value: '#dcd0ff' },
-  { name: 'Pink Lace', value: '#ffddf4' },
-  { name: 'Light Coral', value: '#f08080' },
-  { name: 'Peach Puff', value: '#ffdab9' },
-  { name: 'Pale Goldenrod', value: '#eee8aa' },
-  { name: 'Light Yellow', value: '#ffffe0' },
-  { name: 'Ivory', value: '#fffff0' },
-  { name: 'Azure Mist', value: '#f0ffff' },
-  { name: 'Baby Blue', value: '#89cff0' },
-  { name: 'Pastel Pink', value: '#ffd1dc' },
-  { name: 'Light Salmon', value: '#ffa07a' },
-  { name: 'Blush', value: '#f5c3c2' },
-  { name: 'Sky Blue Gradient', value: 'linear-gradient(to bottom, #87CEEB, #E0F7FA)' },
-  { name: 'Pastel Gradient', value: 'linear-gradient(to bottom, #f5f7fa, #c3cfe2)' },
-  { name: 'Sunrise Gradient', value: 'linear-gradient(to bottom, #ffefba, #ffffff)' },
-  { name: 'Cotton Candy', value: 'linear-gradient(to bottom, #ffb6c1, #f0f8ff)' },
-  { name: 'Slate Gray', value: '#708090' },
-  { name: 'Cadet Blue', value: '#5f9ea0' },
-  { name: 'Cool Gray', value: '#8c92ac' },
-  { name: 'Dusty Rose', value: '#b38b6d' },
-  { name: 'Taupe', value: '#483c32' },
-  { name: 'Sage Green', value: '#8a9a5b' },
-  { name: 'Muted Teal', value: '#5f9f9f' },
-  { name: 'Deep Lavender', value: '#9370db' },
-  { name: 'Dusky Pink', value: '#cc7e8c' },
-  { name: 'Moss Green', value: '#8a9a5b' },
-  { name: 'Muted Indigo', value: '#4b5b6f' },
-  { name: 'Charcoal Blue', value: '#36454f' },
-];
+const ScamProjectCard = ({ project }: { project: ScamProject }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
 
-export default function NFTCreator() {
-  const [selectedElements, setSelectedElements] = useState({
-    backgroundColor: 0,
-    eyes: 0,
-    outfit: 0,
-    mouth: 0,
-    accessory: 0,
-    hat: 0,
-  });
-
-  const [activeCategory, setActiveCategory] = useState('background');
-  const [isDownloading, setIsDownloading] = useState(false);
-  const canvasRef = useRef<HTMLDivElement>(null);
-  const [imagesLoaded, setImagesLoaded] = useState(false);
-
-  const generateRandomCombination = () => {
-    return {
-      eyes: Math.floor(Math.random() * (elements.eyes.length - 1)) + 1,
-      outfit: Math.floor(Math.random() * (elements.outfit.length - 1)) + 1,
-      hat: Math.floor(Math.random() * (elements.hat.length - 1)) + 1,
-      accessory: Math.floor(Math.random() * (elements.accessory.length - 1)) + 1,
-      mouth: Math.floor(Math.random() * (elements.mouth.length - 1)) + 1,
-      backgroundColor: Math.floor(Math.random() * backgroundColors.length)
-    };
+  const getSeverityColor = () => {
+    switch(project.severity) {
+      case 'low': return 'bg-yellow-900/50 text-yellow-200';
+      case 'medium': return 'bg-orange-900/50 text-orange-200';
+      case 'high': return 'bg-red-900/50 text-red-200';
+      case 'critical': return 'bg-purple-900/50 text-purple-200';
+      default: return 'bg-gray-900/50 text-gray-200';
+    }
   };
 
-  const [randomCombinations, setRandomCombinations] = useState(() => 
-    Array(6).fill(0).map(() => generateRandomCombination())
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+      className="relative overflow-hidden rounded-2xl bg-black/20 shadow-2xl backdrop-blur-sm border border-white/10 hover:border-white/30 transition-all duration-300"
+    >
+      <div className="relative w-full h-48 overflow-hidden">
+        <Image
+          src={project.imageUrl}
+          alt={project.name}
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
+        <div className="absolute bottom-4 left-4 right-4">
+          <div className="flex justify-between items-end">
+            <h3 className="text-xl font-bold truncate">{project.name}</h3>
+            <span className={`px-3 py-1 rounded-full text-xs font-medium ${getSeverityColor()}`}>
+              {project.severity.toUpperCase()}
+            </span>
+          </div>
+          <div className="flex items-center mt-1">
+            <span className="text-xs bg-black/50 px-2 py-1 rounded">{project.chain}</span>
+            <span className="text-xs ml-2 text-gray-300">{project.category}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="p-5">
+        <div className="flex justify-between items-start mb-3">
+          <div>
+            <p className="text-sm text-gray-400">Reported: {project.dateReported}</p>
+            <p className="text-sm text-gray-400">By: {project.reportedBy}</p>
+          </div>
+          {project.website && (
+            <a 
+              href={project.website} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-xs bg-white/10 hover:bg-white/20 px-2 py-1 rounded transition-colors"
+            >
+              Website
+            </a>
+          )}
+        </div>
+
+        <p className="text-sm mb-4 line-clamp-3">{project.description}</p>
+
+        <button 
+          onClick={() => setIsExpanded(!isExpanded)}
+          className="text-xs text-gray-400 hover:text-white transition-colors"
+        >
+          {isExpanded ? 'Show less' : 'Show more'}
+        </button>
+
+        {isExpanded && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            transition={{ duration: 0.3 }}
+            className="mt-4 space-y-3"
+          >
+            {project.contracts.length > 0 && (
+              <div>
+                <h4 className="text-xs font-bold text-gray-400 mb-1">CONTRACTS</h4>
+                <div className="space-y-1">
+                  {project.contracts.map((contract, i) => (
+                    <div key={i} className="text-xs bg-black/50 p-2 rounded break-all font-mono">
+                      {contract}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {project.socials && (
+              <div>
+                <h4 className="text-xs font-bold text-gray-400 mb-1">SOCIALS</h4>
+                <div className="flex gap-2">
+                  {project.socials.twitter && (
+                    <a 
+                      href={project.socials.twitter} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-xs bg-blue-900/50 hover:bg-blue-900/70 px-2 py-1 rounded transition-colors"
+                    >
+                      Twitter
+                    </a>
+                  )}
+                  {project.socials.telegram && (
+                    <a 
+                      href={project.socials.telegram} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-xs bg-blue-500/50 hover:bg-blue-500/70 px-2 py-1 rounded transition-colors"
+                    >
+                      Telegram
+                    </a>
+                  )}
+                  {project.socials.discord && (
+                    <a 
+                      href={project.socials.discord} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-xs bg-indigo-500/50 hover:bg-indigo-500/70 px-2 py-1 rounded transition-colors"
+                    >
+                      Discord
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </div>
+    </motion.div>
   );
+};
+
+export default function ScamProjectsPage() {
+  const [projects, setProjects] = useState<ScamProject[]>([]);
+  const [filteredProjects, setFilteredProjects] = useState<ScamProject[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [severityFilter, setSeverityFilter] = useState('all');
+  const [chainFilter, setChainFilter] = useState('all');
 
   useEffect(() => {
-    const preloadImages = async () => {
-      const imageUrls = [
-        '/raccoon/Raccoon.png',
-        ...elements.eyes.filter(e => e.image).map(e => e.image),
-        ...elements.outfit.filter(e => e.image).map(e => e.image),
-        ...elements.hat.filter(e => e.image).map(e => e.image),
-        ...elements.accessory.filter(e => e.image).map(e => e.image),
-        ...elements.mouth.filter(e => e.image).map(e => e.image),
-      ];
-
-      const loadPromises = imageUrls.map(url => {
-        return new Promise((resolve, reject) => {
-          const img = document.createElement('img');
-          img.src = url;
-          img.onload = resolve;
-          img.onerror = reject;
-        });
-      });
-
+    // Simulate API fetch
+    const fetchScamProjects = async () => {
+      setIsLoading(true);
       try {
-        await Promise.all(loadPromises);
-        setImagesLoaded(true);
+        // Mock data - in a real app, this would come from an API
+        const mockProjects: ScamProject[] = [
+          {
+            id: '1',
+            name: 'Injective Yield Farm',
+            imageUrl: '/scam1.webp', // Replace with actual images
+            category: 'DeFi',
+            dateReported: '2023-06-15',
+            reportedBy: 'Community',
+            description: 'Promised unrealistic yields and disappeared with user funds after 2 weeks of operation. The team deleted all social media accounts and the website went offline.',
+            severity: 'critical',
+            website: 'https://fake-injective-yield.com',
+            socials: {
+              twitter: 'https://twitter.com/fakeinjective',
+              telegram: 'https://t.me/fakeinjective',
+            },
+            chain: 'Injective',
+            contracts: ['inj1xyz...abc123', 'inj1def...ghi456']
+          },
+          {
+            id: '2',
+            name: 'Cosmos NFT Scam',
+            imageUrl: '/scam2.webp',
+            category: 'NFT',
+            dateReported: '2023-06-10',
+            reportedBy: 'Security Team',
+            description: 'Fake NFT collection that copied artwork from legitimate projects. After selling out, the creators rug pulled and abandoned the project.',
+            severity: 'high',
+            chain: 'Cosmos',
+            contracts: ['cosmos1xyz...abc123']
+          },
+          {
+            id: '3',
+            name: 'Ethereum Token Scam',
+            imageUrl: '/scam3.webp',
+            category: 'Token',
+            dateReported: '2023-06-05',
+            reportedBy: 'User Report',
+            description: 'Token with hidden transfer fees that drained wallets when users tried to sell. The contract had malicious code that wasn\'t visible in the verified source.',
+            severity: 'high',
+            chain: 'Ethereum',
+            contracts: ['0x1234...5678']
+          },
+          {
+            id: '4',
+            name: 'Polygon Fake Airdrop',
+            imageUrl: '/scam4.webp',
+            category: 'Airdrop',
+            dateReported: '2023-05-28',
+            reportedBy: 'Security Team',
+            description: 'Fake airdrop that required users to connect wallets and sign transactions that drained funds.',
+            severity: 'medium',
+            chain: 'Polygon',
+            contracts: ['0xabcd...efgh']
+          },
+          {
+            id: '5',
+            name: 'BSC Honeypot',
+            imageUrl: '/scam5.webp',
+            category: 'Token',
+            dateReported: '2023-05-20',
+            reportedBy: 'Community',
+            description: 'Token that could be bought but not sold due to hidden contract restrictions.',
+            severity: 'medium',
+            chain: 'BSC',
+            contracts: ['0x9876...5432']
+          },
+          {
+            id: '6',
+            name: 'Solana Fake Wallet',
+            imageUrl: '/scam6.webp',
+            category: 'Wallet',
+            dateReported: '2023-05-15',
+            reportedBy: 'Security Team',
+            description: 'Fake wallet app that stole seed phrases when users tried to import wallets.',
+            severity: 'critical',
+            chain: 'Solana',
+            contracts: []
+          },
+          {
+            id: '7',
+            name: 'Avalanche Fake DEX',
+            imageUrl: '/scam7.webp',
+            category: 'Exchange',
+            dateReported: '2023-05-10',
+            reportedBy: 'User Report',
+            description: 'Fake decentralized exchange that front-ran trades and stole funds.',
+            severity: 'high',
+            chain: 'Avalanche',
+            contracts: ['0x2468...1357']
+          },
+          {
+            id: '8',
+            name: 'Fantom Phishing',
+            imageUrl: '/scam8.webp',
+            category: 'Phishing',
+            dateReported: '2023-05-01',
+            reportedBy: 'Security Team',
+            description: 'Phishing site impersonating a legitimate Fantom project to steal wallet credentials.',
+            severity: 'low',
+            chain: 'Fantom',
+            contracts: []
+          }
+        ];
+        
+        setProjects(mockProjects);
+        setFilteredProjects(mockProjects);
       } catch (error) {
-        console.error('Error preloading images:', error);
+        console.error('Error fetching scam projects:', error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    preloadImages();
+    fetchScamProjects();
   }, []);
 
-  const handleElementChange = (category: keyof typeof selectedElements, index: number) => {
-    setSelectedElements(prev => ({
-      ...prev,
-      [category]: index,
-    }));
-  };
-
-  const downloadNFT = async () => {
-    if (!imagesLoaded) {
-      alert('Images are still loading. Please wait a moment and try again.');
-      return;
-    }
-  
-    setIsDownloading(true);
-    try {
-      const preview = canvasRef.current;
-      if (!preview) return;
-  
-      const buttons = document.querySelectorAll('button');
-      buttons.forEach(button => button.style.visibility = 'hidden');
-  
-      const imgs = preview.querySelectorAll('img');
-      await Promise.all(
-        Array.from(imgs).map(img => {
-          if (img.complete) return Promise.resolve();
-          return new Promise(resolve => {
-            img.onload = resolve;
-            img.onerror = resolve;
-          });
-        })
-      );
-  
-      await new Promise(resolve => setTimeout(resolve, 300));
-  
-      const bgValue = backgroundColors[selectedElements.backgroundColor].value;
+  useEffect(() => {
+    const filtered = projects.filter(project => {
+      const matchesSearch = searchTerm === '' || 
+        project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        project.description.toLowerCase().includes(searchTerm.toLowerCase());
       
-      const dataUrl = await toPng(preview, {
-        quality: 1,
-        pixelRatio: 3,
-        skipFonts: true,
-        backgroundColor: bgValue.startsWith('linear-gradient') 
-          ? '#00000000' 
-          : bgValue,    
-      });
-  
-      buttons.forEach(button => button.style.visibility = 'visible');
-  
-      const link = document.createElement('a');
-      link.download = 'pedro-nft.png';
-      link.href = dataUrl;
-      link.click();
+      const matchesCategory = categoryFilter === 'all' || 
+        project.category.toLowerCase() === categoryFilter.toLowerCase();
       
-    } catch (error) {
-      console.error('Error generating NFT:', error);
-      alert('Error generating NFT. Please try again.');
-    } finally {
-      setIsDownloading(false);
-    }
-  };
+      const matchesSeverity = severityFilter === 'all' || 
+        project.severity === severityFilter;
+      
+      const matchesChain = chainFilter === 'all' || 
+        project.chain.toLowerCase() === chainFilter.toLowerCase();
+      
+      return matchesSearch && matchesCategory && matchesSeverity && matchesChain;
+    });
+    
+    setFilteredProjects(filtered);
+  }, [searchTerm, categoryFilter, severityFilter, chainFilter, projects]);
 
-  const getBackgroundStyle = () => {
-    const bgValue = backgroundColors[selectedElements.backgroundColor].value;
-    if (bgValue.startsWith('linear-gradient')) {
-      return { backgroundImage: bgValue };
-    }
-    return { backgroundColor: bgValue };
-  };
+  const categories = [...new Set(projects.map(p => p.category))];
+  const chains = [...new Set(projects.map(p => p.chain))];
+  const severities: ('low' | 'medium' | 'high' | 'critical')[] = ['low', 'medium', 'high', 'critical'];
 
   return (
     <>
       <Head>
-        <title>Pedro PF Creator</title>
-        <meta name="description" content="Create your custom Pedro raccoon NFT" />
+        <title>Pedro | Scam Projects Database</title>
+        <meta name="description" content="Database of known scam projects in the crypto space" />
+        <meta property="og:image" content="/pedro_logo4.png" />
       </Head>
 
-      <div className="min-h-screen bg-black text-white overflow-hidden font-mono">
+      <div className="min-h-screen bg-black text-white overflow-hidden font-mono selection:bg-white selection:text-black">
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div className="absolute inset-0">
             <Image
@@ -298,329 +336,144 @@ export default function NFTCreator() {
         </div>
 
         <div className="relative z-10">
-          <section className="flex items-center justify-center py-12 text-center relative overflow-hidden">
+          <section className="flex items-center justify-center py-16 text-center relative overflow-hidden">
             <motion.div
               initial={{ opacity: 0, y: -50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
               className="px-6 max-w-4xl relative z-10"
             >
-              <motion.h1 className="text-4xl md:text-7xl font-bold mb-5 bg-clip-text text-white">
-                PEDRO CRAFT
+              <motion.h1
+                className="text-4xl md:text-7xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-300"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.8 }}
+              >
+                Scam Projects Database
               </motion.h1>
+              
+              <motion.p
+                className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4, duration: 0.8 }}
+              >
+                A community-maintained database of known scam projects, fake airdrops, and malicious contracts.
+              </motion.p>
+              
               <motion.div
                 initial={{ opacity: 0, scaleX: 0 }}
                 animate={{ opacity: 1, scaleX: 1 }}
                 transition={{ delay: 0.2, duration: 1.2, ease: "circOut" }}
-                className="h-px w-full bg-gradient-to-r from-transparent via-white to-transparent"
+                className="h-px w-full bg-gradient-to-r from-transparent via-white to-transparent mb-12"
               />
             </motion.div>
           </section>
 
-          <div className="sm:py-8 py-2 px-2 mx-auto max-w-[1500px]">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              <div className="flex flex-col gap-4 order-1 lg:order-none">
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="bg-black/50 p-6 rounded-xl border border-gray-700 shadow-lg relative overflow-hidden"
-                >                  
-                  <h2 className="text-2xl font-bold text-center mb-6 text-white">
-                    HOW IT WORKS
-                  </h2>
-                  
-                  <div className="space-y-4">
-                    {[
-                      {
-                        icon: "1.",
-                        title: "Select Category",
-                        text: "Choose from Background, Eyes, Outfit and more"
-                      },
-                      {
-                        icon: "2.",
-                        title: "Mix & Match",
-                        text: "Combine different elements to create your unique Pedro"
-                      },
-                      {
-                        icon: "3.",
-                        title: "Download",
-                        text: "Save your creation with one click"
-                      },
-                      {
-                        icon: "!",
-                        title: "Important",
-                        text: "Pedro NFTs are free for personal use"
-                      }
-                    ].map((item, index) => (
-                      <motion.div 
-                        key={index}
-                        initial={{ x: -20, opacity: 0 }}
-                        animate={{ x: 0, opacity: 1 }}
-                        transition={{ delay: 0.3 + index * 0.1 }}
-                        className="flex items-start p-4 bg-gray-800 rounded-lg border border-gray-700 hover:border-gray-600 transition-all group"
-                      >
-                        <span className="font-mono text-gray-400 mr-4 text-lg group-hover:text-white transition-colors">
-                          {item.icon}
-                        </span>
-                        <div>
-                          <h3 className="font-semibold text-white">{item.title}</h3>
-                          <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors">
-                            {item.text}
-                          </p>
-                        </div>
-                      </motion.div>
-                    ))}
-                  </div>
-                  
-                  <motion.div 
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    transition={{ delay: 0.7 }}
-                    className="mt-6 text-center text-xs text-gray-500 font-mono"
-                  >
-                    CREATE • CUSTOMIZE • DOWNLOAD
-                  </motion.div>
-                </motion.div>
-
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="relative aspect-square rounded-xl overflow-hidden border-2 border-white/20 shadow-lg"
-                  ref={canvasRef}
-                  style={{
-                    ...getBackgroundStyle(),
-                    isolation: 'isolate' 
-                  }}
-                >
-                  <div className="absolute inset-0">
-                    <img
-                      src="/raccoon/Raccoon.png"
-                      alt="Raccoon"
-                      className="w-full h-full object-contain"
-                    />
-                  </div>
-
-                  {selectedElements.eyes > 0 && (
-                    <div className="absolute inset-0">
-                      <img
-                        src={elements.eyes[selectedElements.eyes].image}
-                        alt="Eyes"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                  )}
-
-                  {selectedElements.outfit > 0 && (
-                    <div className="absolute inset-0">
-                      <img
-                        src={elements.outfit[selectedElements.outfit].image}
-                        alt="Outfit"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                  )}
-
-                  {selectedElements.mouth > 0 && (
-                    <div className="absolute inset-0">
-                      <img
-                        src={elements.mouth[selectedElements.mouth].image}
-                        alt="Mouth"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                  )}
-
-                  {selectedElements.hat > 0 && (
-                    <div className="absolute inset-0">
-                      <img
-                        src={elements.hat[selectedElements.hat].image}
-                        alt="Hat"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                  )}
-
-                  {selectedElements.accessory > 0 && (
-                    <div className="absolute inset-0">
-                      <img
-                        src={elements.accessory[selectedElements.accessory].image}
-                        alt="Accessory"
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                  )}
-                </motion.div>
+          <section className="px-4 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+              <div className="md:col-span-2">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search projects..."
+                  className="w-full bg-black/70 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-white/50"
+                />
               </div>
+              <select
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="bg-black/70 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-white/50"
+              >
+                <option value="all">All Categories</option>
+                {categories.map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+              <select
+                value={severityFilter}
+                onChange={(e) => setSeverityFilter(e.target.value)}
+                className="bg-black/70 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-white/50"
+              >
+                <option value="all">All Severities</option>
+                {severities.map(severity => (
+                  <option key={severity} value={severity}>{severity.charAt(0).toUpperCase() + severity.slice(1)}</option>
+                ))}
+              </select>
+            </div>
 
-              <div className="space-y-6 order-2">
-                <div className="flex overflow-x-auto pb-2 gap-2">
-                  <button
-                    onClick={() => setActiveCategory('background')}
-                    className={`px-4 py-2 rounded-full whitespace-nowrap transition-all ${
-                      activeCategory === 'background' 
-                        ? 'bg-white text-black font-bold' 
-                        : 'bg-white/10 hover:bg-white/20'
-                    }`}
-                  >
-                    Background
-                  </button>
-                  {Object.keys(elements).map((category) => (
-                    <button
-                      key={category}
-                      onClick={() => setActiveCategory(category)}
-                      className={`px-4 py-2 rounded-full whitespace-nowrap capitalize transition-all ${
-                        activeCategory === category 
-                          ? 'bg-white text-black font-bold' 
-                          : 'bg-white/10 hover:bg-white/20'
-                      }`}
-                    >
-                      {category}
-                    </button>
-                  ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {isLoading ? (
+                Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="h-80 bg-black/20 rounded-2xl animate-pulse" />
+                ))
+              ) : filteredProjects.length > 0 ? (
+                filteredProjects.map(project => (
+                  <ScamProjectCard key={project.id} project={project} />
+                ))
+              ) : (
+                <div className="col-span-full text-center py-16">
+                  <h3 className="text-xl font-bold mb-2">No projects found</h3>
+                  <p className="text-gray-400">Try adjusting your filters</p>
                 </div>
+              )}
+            </div>
+          </section>
 
-                <motion.div
-                  key={activeCategory}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="bg-black/50 p-4 rounded-lg border border-gray-700 shadow-lg backdrop-blur-sm"
-                >
-
-                  <div className="mb-3">
-                    <div className="flex justify-between items-center mb-3">
-                      <h3 className="text-lg font-semibold text-white">Combinations</h3>
-                      <button
-                        onClick={() => {
-                          const newCombinations = Array(6).fill(0).map(() => generateRandomCombination());
-                          setRandomCombinations(newCombinations);
-                        }}
-                        className="px-3 py-1 text-sm text-black hover:text-white bg-white hover:bg-black rounded-full"
-                      >
-                        Random
-                      </button>
+          <section className="py-16 px-4 max-w-7xl mx-auto">
+            <div className="bg-black/50 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
+              <h2 className="text-2xl font-bold mb-6">About This Database</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <h3 className="text-lg font-bold mb-4">How We Identify Scams</h3>
+                  <ul className="space-y-3 text-gray-300">
+                    <li className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span>Community reports from verified sources</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span>Smart contract analysis for malicious code</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span>Verification of team disappearance or fund movement</span>
+                    </li>
+                    <li className="flex items-start">
+                      <span className="text-green-400 mr-2">✓</span>
+                      <span>Confirmed reports of stolen funds</span>
+                    </li>
+                  </ul>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold mb-4">Severity Levels</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center">
+                      <span className="w-3 h-3 rounded-full bg-purple-500 mr-2"></span>
+                      <span className="font-medium">Critical</span>
+                      <span className="text-gray-400 ml-2">Funds stolen or high risk</span>
                     </div>
-
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-                      {randomCombinations.map((combo, index) => (
-                        <div 
-                          key={index}
-                          className="relative group cursor-pointer"
-                          onClick={() => setSelectedElements(combo)}
-                        >
-                          <div 
-                            className="aspect-square rounded-lg overflow-hidden border-2 border-white/20"
-                            style={{
-                              backgroundColor: backgroundColors[combo.backgroundColor].value.startsWith('linear-gradient') 
-                                ? '#00000000'
-                                : backgroundColors[combo.backgroundColor].value,
-                              backgroundImage: backgroundColors[combo.backgroundColor].value.startsWith('linear-gradient') 
-                                ? backgroundColors[combo.backgroundColor].value
-                                : undefined
-                            }}
-                          >
-                            <div className="absolute inset-0">
-                              <img src="/raccoon/Raccoon.png" className="w-full h-full object-contain" />
-                            </div>
-                            {combo.eyes > 0 && <img src={elements.eyes[combo.eyes].image} className="absolute inset-0 w-full h-full object-contain" />}
-                            {combo.outfit > 0 && <img src={elements.outfit[combo.outfit].image} className="absolute inset-0 w-full h-full object-contain" />}
-                            {combo.hat > 0 && <img src={elements.hat[combo.hat].image} className="absolute inset-0 w-full h-full object-contain" />}
-                            {combo.accessory > 0 && <img src={elements.accessory[combo.accessory].image} className="absolute inset-0 w-full h-full object-contain" />}
-                            {combo.mouth > 0 && <img src={elements.mouth[combo.mouth].image} className="absolute inset-0 w-full h-full object-contain" />}
-                          </div>
-                        </div>
-                      ))}
+                    <div className="flex items-center">
+                      <span className="w-3 h-3 rounded-full bg-red-500 mr-2"></span>
+                      <span className="font-medium">High</span>
+                      <span className="text-gray-400 ml-2">Confirmed malicious activity</span>
                     </div>
-
-                  {activeCategory === 'background' ? (
-                    <>
-                      <h3 className="text-xl font-semibold mb-3 mt-6 text-white">
-                        Background Color
-                      </h3>
-                      <div className="grid grid-cols-6 gap-2">
-                        {backgroundColors.map((color, index) => (
-                          <button
-                            key={index}
-                            onClick={() => handleElementChange('backgroundColor', index)}
-                            className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
-                              selectedElements.backgroundColor === index
-                                ? 'border-white ring-2 ring-white'
-                                : 'border-white/20 hover:border-white/50'
-                            }`}
-                            style={color.value.startsWith('linear-gradient') ? 
-                              { backgroundImage: color.value } : 
-                              { backgroundColor: color.value }}
-                            title={color.name}
-                          >
-                            {selectedElements.backgroundColor === index && (
-                              <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                              </div>
-                            )}
-                          </button>
-                        ))}
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <h3 className="text-xl font-semibold mb-3 capitalize text-white">
-                        {activeCategory}
-                      </h3>
-                      <div className="grid grid-cols-4 gap-3">
-                        {elements[activeCategory as keyof typeof elements].map((item, index) => (
-                          <button
-                            key={index}
-                            onClick={() => handleElementChange(activeCategory as keyof typeof selectedElements, index)}
-                            className={`relative aspect-square rounded-lg overflow-hidden border-2 transition-all ${
-                              selectedElements[activeCategory as keyof typeof selectedElements] === index
-                                ? 'border-white ring-2 ring-white'
-                                : 'border-white/20 hover:border-white/50'
-                            }`}
-                          >
-                            {item.image ? (
-                              <img
-                                src={item.image}
-                                alt=""
-                                className="w-full h-full object-cover"
-                              />
-                            ) : (
-                              <div className="absolute inset-0 flex items-center justify-center bg-white/5">
-                                <span className="text-xs text-white/70">None</span>
-                              </div>
-                            )}
-                          </button>
-                        ))}
-                      </div>
-                    </>
-                  )}
-
+                    <div className="flex items-center">
+                      <span className="w-3 h-3 rounded-full bg-orange-500 mr-2"></span>
+                      <span className="font-medium">Medium</span>
+                      <span className="text-gray-400 ml-2">Suspicious behavior</span>
+                    </div>
+                    <div className="flex items-center">
+                      <span className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></span>
+                      <span className="font-medium">Low</span>
+                      <span className="text-gray-400 ml-2">Potential risk</span>
+                    </div>
                   </div>
-                </motion.div>
-
-                <div className="hidden lg:flex justify-center items-center p-5">
-                  <Button
-                    onClick={downloadNFT}
-                    disabled={isDownloading || !imagesLoaded}
-                    className="w-full md:w-1/2 py-3 text-lg font-bold bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white"
-                    label={isDownloading ? 'Downloading...' : 'DOWNLOAD IMAGE'}
-                  />
-                </div>
-
-                <div className="lg:hidden flex justify-center items-center p-10">
-                  <Button
-                    onClick={downloadNFT}
-                    disabled={isDownloading || !imagesLoaded}
-                    className="w-full py-3 text-lg font-bold bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white"
-                    label={isDownloading ? 'Downloading...' : 'Download Image'}
-                  />
                 </div>
               </div>
             </div>
-          </div>
+          </section>
         </div>
       </div>
     </>

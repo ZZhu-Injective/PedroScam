@@ -125,7 +125,6 @@ const Navbar = () => {
 
           <ul className="flex flex-col gap-4 mx-auto lg:gap-6 xl:gap-5 text-neutral-950 items-center mt-20 lg:mt-0 lg:flex-row">
             {[
-              { href: "/scanwallet", label: "SCAN WALLET" },
               { href: "/scamaddress", label: "SCAM ADDRESS" },
               { href: "/scamproject", label: "SCAM PROJECT" },
               { href: "/submitscam", label: "SUBMIT SCAM" },
