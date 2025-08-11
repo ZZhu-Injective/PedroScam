@@ -57,9 +57,9 @@ const Navbar = () => {
               height={40}
             />
             <span className="hidden sm:inline flex items-center gap-2">
-              <span className="font-mono">PEDRO x ART</span>
+              <span className="font-mono">PEDRO x SCAM</span>
             </span>
-            <span className="sm:hidden font-mono">PEDRO x ART</span>
+            <span className="sm:hidden font-mono">PEDRO x SCAM</span>
           </Link>
 
           {!isLargeScreen && (
@@ -125,11 +125,10 @@ const Navbar = () => {
 
           <ul className="flex flex-col gap-4 mx-auto lg:gap-6 xl:gap-5 text-neutral-950 items-center mt-20 lg:mt-0 lg:flex-row">
             {[
-              { href: "/arts", label: "ART" },
-              { href: "/meme", label: "MEME" },
-              { href: "/factory", label: "CRAFT" },
-              { href: "/editor", label: "EDIT" },
-              { href: "/nftgenerator", label: "NFT" },
+              { href: "/scanwallet", label: "SCAN WALLET" },
+              { href: "/scamaddress", label: "SCAM ADDRESS" },
+              { href: "/scamproject", label: "SCAM PROJECT" },
+              { href: "/submitscam", label: "SUBMIT SCAM" },
               { href: "https://pedroinjraccoon.online/", label: "MAIN" },
             ].map((item) => (
               <li
@@ -171,7 +170,7 @@ const Navbar = () => {
                   </svg>
                 </a>
                 <a
-                  href="https://pedro-7.gitbook.io/pedro-meme-coin"
+                  href="https://pedro-on-injective.gitbook.io/pedro-on-injective-docs/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="hover:opacity-70 transition-opacity"

@@ -215,7 +215,7 @@ export default function MemeGallery() {
         <div className="fixed inset-0 overflow-hidden pointer-events-none">
           <div className="absolute inset-0">
             <Image
-              src="/wallpaper9.webp"
+              src="/wallpaper1.webp"
               alt="Background texture"
               layout="fill"
               objectFit="cover"

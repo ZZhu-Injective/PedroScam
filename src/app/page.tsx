@@ -8,13 +8,13 @@ export default function AltHomePage() {
   const artImages = Array.from({ length: 8 }, (_, i) => `/Pedro${i + 1}.png`);
   const [typingComplete, setTypingComplete] = useState(false);
 
-  const textToType = "This is a sacred space where we celebrate our $PEDRO artists, meme creators, and NFT visionaries. A permanent digital gallery showcasing their work for all time. Together we'll light the creative spark and elevate each other's art to new heights.";
+  const textToType = "In a world full of digital traps, PEDRO x SCAM is your early warning system. Trust is earned but protection should be automatic.";
 
   return (
     <>
       <Head>
-        <title>PEDRO×ART</title>
-        <meta name="description" content="Explore Pedro's art in pure black and white" />
+        <title>PEDRO×SCAM</title>
+        <meta name="description" content="Explore Pedro's scam in pure black and white" />
       </Head>
 
       <div 
@@ -24,7 +24,7 @@ export default function AltHomePage() {
           <div className="absolute inset-0 bg-black opacity-10" />
           <div className="absolute inset-0">
             <Image
-              src="/wallpaper9.webp"
+              src="/wallpaper1.webp"
               alt="Background texture"
               layout="fill"
               objectFit="cover"
@@ -52,7 +52,7 @@ export default function AltHomePage() {
               className="text-5xl md:text-8xl font-bold mb-6 tracking-tighter font-mono"
               whileHover={{ scale: 1.02 }}
             >
-              PEDRO × <span className="text-white font-mono bg-clip-text bg-gradient-to-r">ART</span>
+              PEDRO × <span className="text-white font-mono bg-clip-text bg-gradient-to-r">SCAM</span>
             </motion.h1>
             <motion.p 
               className="text-xl md:text-2xl opacity-80 mb-8"
@@ -60,7 +60,7 @@ export default function AltHomePage() {
               animate={{ opacity: 0.8 }}
               transition={{ delay: 0.3, duration: 0.8 }}
             >
-              Art is freedom
+              PEDRO PROTECT YOU
             </motion.p>
             <motion.div
               initial={{ opacity: 0 }}
@@ -84,7 +84,7 @@ export default function AltHomePage() {
                 rel="noopener noreferrer"
               >
                 <button className="px-8 py-3 border-2 border-gray-400 bg-transparent text-gray-300 text-lg font-mono hover:bg-white hover:text-black hover:border-white transition-all duration-300">
-                  MEDIA KIT
+                  SUBMIT SCAM
                 </button>
               </motion.a>
             </motion.div>
@@ -100,7 +100,7 @@ export default function AltHomePage() {
             className="mb-32"
           >
             <h2 className="text-3xl md:text-5xl text-center font-bold tracking-tighter mb-12">
-              <span className="text-white bg-clip-text bg-gradient-to-r">CREATOR SANCTUARY</span>
+              <span className="text-white bg-clip-text bg-gradient-to-r">WARNING PEDRO</span>
             </h2>
             
             <motion.div 
@@ -125,7 +125,7 @@ export default function AltHomePage() {
                 >
                   <div className="h-px w-48 mx-auto bg-gradient-to-r from-transparent via-gray-500 to-transparent my-8" />
                   <p className="text-lg italic opacity-70">
-                    Recognition for creators
+                    PEDRO THE RACCOON
                   </p>
                 </motion.div>
               )}
