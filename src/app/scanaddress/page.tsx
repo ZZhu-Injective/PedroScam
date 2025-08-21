@@ -24,6 +24,36 @@ interface ScamWallet {
   severity: 'low' | 'medium' | 'high' | 'critical';
 }
 
+interface WalletInfo {
+  address: string;
+  total_transactions: number;
+  first_transaction_date: string;
+  last_transaction_date: string;
+  block_range: {
+    min: number;
+    max: number;
+  };
+  transaction_types: Record<string, number>;
+  dapp_usage: Record<string, number>;
+  contracts_interacted: Record<string, number>;
+  actions_performed: Record<string, number>;
+  suspicious_transactions: Array<{
+    block_number: number;
+    timestamp: string;
+    type: string;
+    flags: string[];
+    hash: string;
+    risk_score: number;
+  }>;
+  top_recipients: Array<{
+    address: string;
+    count: number;
+  }>;
+  monthly_activity: Record<string, number>;
+  message_types: Record<string, number>;
+  risk_score: number;
+}
+
 const containerVariants = {
   hidden: { opacity: 0 },
   show: {
@@ -239,10 +269,11 @@ const ScamWalletCard = ({ wallet }: { wallet: ScamWallet }) => {
   );
 };
 
-const StatCard = ({ title, value, children }: { title: string, value: string | number, children?: React.ReactNode }) => {
+const StatCard = ({ title, value, children, tooltip }: { title: string, value: string | number, children?: React.ReactNode, tooltip?: string }) => {
   const cardRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (cardRef.current) {
@@ -281,9 +312,206 @@ const StatCard = ({ title, value, children }: { title: string, value: string | n
       
       <div className="absolute inset-0 border-2 border-transparent group-hover:border-white/40 transition-all duration-500 z-20 pointer-events-none rounded-2xl" />
       
-      <h3 className="text-gray-400 text-sm uppercase tracking-wider mb-2">{title}</h3>
+      <div className="flex items-center justify-between">
+        <h3 className="text-gray-400 text-sm uppercase tracking-wider mb-2">{title}</h3>
+        {tooltip && (
+          <div 
+            className="relative"
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+          >
+            <svg className="w-4 h-4 text-gray-500 cursor-help" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd"></path>
+            </svg>
+            {showTooltip && (
+              <div className="absolute z-50 w-64 p-2 text-sm text-white bg-gray-900 rounded-lg shadow-lg -top-12 left-6">
+                {tooltip}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
       <p className="text-3xl font-bold mb-4">{value}</p>
       {children}
+    </motion.div>
+  );
+};
+
+const SuspiciousTransactionCard = ({ transaction }: { transaction: any }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      setMousePosition({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      });
+    }
+  };
+
+  const getRiskColor = (score: number) => {
+    if (score <= 20) return 'text-yellow-400';
+    if (score <= 40) return 'text-orange-400';
+    return 'text-red-400';
+  };
+
+  const getRiskBgColor = (score: number) => {
+    if (score <= 20) return 'bg-yellow-900/50';
+    if (score <= 40) return 'bg-orange-900/50';
+    return 'bg-red-900/50';
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      variants={itemVariants}
+      initial={{ opacity: 0.6 }}
+      whileHover={{ 
+        scale: 1.03,
+        zIndex: 10,
+        opacity: 1,
+      }}
+      transition={{ type: "spring", stiffness: 400, damping: 20 }}
+      className="group relative overflow-hidden rounded-2xl bg-black/20 shadow-2xl hover:shadow-white/20 transition-all duration-500 backdrop-blur-sm border border-white/10 hover:border-white/30 w-full p-6"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onMouseMove={handleMouseMove}
+    >
+      <motion.div 
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        animate={{
+          background: isHovered 
+            ? `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(255,255,255,0.15), transparent 70%)`
+            : 'transparent'
+        }}
+      />
+      
+      <div className="absolute inset-0 border-2 border-transparent group-hover:border-white/40 transition-all duration-500 z-20 pointer-events-none rounded-2xl" />
+      
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <h3 className="text-lg font-bold mb-1">Block #{transaction.block_number}</h3>
+          <p className="text-sm text-gray-400">{transaction.timestamp}</p>
+        </div>
+        <span className={`px-3 py-1 rounded-full text-xs font-medium ${getRiskBgColor(transaction.risk_score)} ${getRiskColor(transaction.risk_score)}`}>
+          Risk: {transaction.risk_score}
+        </span>
+      </div>
+      
+      <div className="mb-4">
+        <p className="text-sm text-gray-300 break-all">Hash: {transaction.hash}</p>
+      </div>
+      
+      <div className="mb-4">
+        <h4 className="text-sm font-bold text-gray-400 mb-2">Flags:</h4>
+        <div className="flex flex-wrap gap-2">
+          {transaction.flags.map((flag: string, index: number) => (
+            <span key={index} className="px-2 py-1 bg-red-900/30 text-red-200 rounded-full text-xs">
+              {flag}
+            </span>
+          ))}
+        </div>
+      </div>
+    </motion.div>
+  );
+};
+
+const DataVisualizationCard = ({ title, data, type }: { title: string, data: Record<string, any>, type: 'bar' | 'pie' | 'list' }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      setMousePosition({
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      });
+    }
+  };
+
+  const total = Object.values(data).reduce((sum, value) => sum + value, 0);
+  
+  return (
+    <motion.div
+      ref={cardRef}
+      variants={itemVariants}
+      initial={{ opacity: 0.6 }}
+      whileHover={{ 
+        scale: 1.03,
+        zIndex: 10,
+        opacity: 1,
+      }}
+      transition={{ type: "spring", stiffness: 400, damping: 20 }}
+      className="group relative overflow-hidden rounded-2xl bg-black/20 shadow-2xl hover:shadow-white/20 transition-all duration-500 backdrop-blur-sm border border-white/10 hover:border-white/30 w-full p-6"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onMouseMove={handleMouseMove}
+    >
+      <motion.div 
+        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+        animate={{
+          background: isHovered 
+            ? `radial-gradient(circle at ${mousePosition.x}px ${mousePosition.y}px, rgba(255,255,255,0.15), transparent 70%)`
+            : 'transparent'
+        }}
+      />
+      
+      <div className="absolute inset-0 border-2 border-transparent group-hover:border-white/40 transition-all duration-500 z-20 pointer-events-none rounded-2xl" />
+      
+      <h3 className="text-lg font-bold mb-4">{title}</h3>
+      
+      {type === 'bar' && (
+        <div className="space-y-2">
+          {Object.entries(data).map(([key, value], index) => (
+            <div key={index} className="flex items-center justify-between">
+              <span className="text-sm text-gray-300 truncate max-w-[40%]">{key}</span>
+              <div className="flex-1 mx-2 bg-gray-800 rounded-full h-2">
+                <div 
+                  className="bg-purple-500 h-2 rounded-full" 
+                  style={{ width: `${(value / total) * 100}%` }}
+                ></div>
+              </div>
+              <span className="text-sm text-gray-400 w-10 text-right">{value}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      
+      {type === 'list' && (
+        <div className="space-y-2 max-h-60 overflow-y-auto">
+          {Object.entries(data).map(([key, value], index) => (
+            <div key={index} className="flex justify-between items-center py-1 border-b border-white/10">
+              <span className="text-sm text-gray-300 truncate max-w-[70%]">{key}</span>
+              <span className="text-sm text-gray-400">{value}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      
+      {type === 'pie' && (
+        <div className="grid grid-cols-2 gap-4">
+          {Object.entries(data).slice(0, 6).map(([key, value], index) => (
+            <div key={index} className="flex items-center">
+              <div 
+                className="w-3 h-3 rounded-full mr-2"
+                style={{ backgroundColor: `hsl(${index * 60}, 70%, 50%)` }}
+              ></div>
+              <span className="text-sm text-gray-300 truncate flex-1">{key}</span>
+              <span className="text-sm text-gray-400 ml-2">{value}</span>
+            </div>
+          ))}
+          {Object.entries(data).length > 6 && (
+            <div className="col-span-2 text-center text-sm text-gray-500">
+              +{Object.entries(data).length - 6} more
+            </div>
+          )}
+        </div>
+      )}
     </motion.div>
   );
 };
@@ -301,6 +529,7 @@ export default function WalletScanner() {
   const [filterType, setFilterType] = useState<'all' | 'wallet' | 'contract'>('all');
   const [filterDate, setFilterDate] = useState<string>('');
   const [filterAddress, setFilterAddress] = useState<string>('');
+  const [walletInfo, setWalletInfo] = useState<WalletInfo | null>(null);
   
   const scannerRef = useRef<HTMLDivElement>(null);
 
@@ -411,106 +640,50 @@ export default function WalletScanner() {
     setIsLoading(true);
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Fetch data from the API
+      const response = await fetch(`https://api.injectivepedro.com/walletinfo/${walletAddress}/`);
+      const data: WalletInfo = await response.json();
+      setWalletInfo(data);
       
+      // Generate mock transactions based on the API data
       const mockTransactions: Transaction[] = [
         {
-          hash: '0x4a3b...c82d',
+          hash: data.suspicious_transactions[0]?.hash || '0x4a3b...c82d',
           type: 'Token Transfer',
           amount: 125.42,
-          date: '2023-05-15 14:32',
-          message: 'Sent to exchange',
+          date: data.first_transaction_date,
+          message: 'First transaction',
           isScam: false
         },
         {
-          hash: '0x8f2e...9d1a',
+          hash: data.suspicious_transactions[1]?.hash || '0x8f2e...9d1a',
           type: 'NFT Purchase',
           amount: 42.0,
-          date: '2023-05-14 09:12',
-          message: 'Bought #1234',
+          date: data.last_transaction_date,
+          message: 'Latest transaction',
           isScam: false
         },
-        {
-          hash: '0x3c7a...e45b',
-          type: 'Token Swap',
-          amount: 78.91,
-          date: '2023-05-12 18:45',
-          message: 'INJ to USDT',
-          isScam: false
-        },
-        {
-          hash: '0x1d9f...b72c',
-          type: 'Token Transfer',
-          amount: 0.01,
-          date: '2023-05-10 11:03',
-          message: 'Test transaction',
-          isScam: false
-        },
-        {
-          hash: '0x6e34...d89f',
-          type: 'Token Transfer',
-          amount: 500.0,
-          date: '2023-05-08 22:15',
-          message: 'Received payment',
-          isScam: false
-        },
-        {
-          hash: '0x5b21...c73a',
-          type: 'Contract Interaction',
-          amount: 0.0,
-          date: '2023-05-05 07:28',
-          message: 'Approved spending',
-          isScam: false
-        },
-        {
-          hash: '0x9a3d...f82b',
-          type: 'Token Transfer',
-          amount: 12.5,
-          date: '2023-05-03 15:42',
-          message: 'Sent to friend',
-          isScam: false
-        },
-        {
-          hash: '0x2e7c...a91d',
-          type: 'NFT Transfer',
-          amount: 0.0,
-          date: '2023-05-01 10:37',
-          message: 'Sent NFT #5678',
-          isScam: false
-        },
-        {
-          hash: '0x4f8b...d62e',
-          type: 'Token Swap',
-          amount: 34.67,
-          date: '2023-04-28 19:23',
-          message: 'USDT to INJ',
-          isScam: false
-        },
-        {
-          hash: '0x7d3a...c45f',
-          type: 'Token Transfer',
+        ...data.suspicious_transactions.slice(0, 3).map(tx => ({
+          hash: tx.hash,
+          type: 'Suspicious',
           amount: 0.1,
-          date: '2023-04-25 13:56',
-          message: 'Received from unknown',
+          date: tx.timestamp,
+          message: tx.flags.join(', '),
           isScam: true
-        }
+        }))
       ];
 
       const mockStats = {
-        totalTransactions: mockTransactions.length,
-        largestTransaction: Math.max(...mockTransactions.map(t => t.amount)),
-        smallestTransaction: Math.min(...mockTransactions.filter(t => t.amount > 0).map(t => t.amount)),
+        totalTransactions: data.total_transactions,
+        largestTransaction: 500, // Mock value
+        smallestTransaction: 0.01, // Mock value
         lastTransaction: mockTransactions[0],
-        transactionTypes: [...new Set(mockTransactions.map(t => t.type))]
+        transactionTypes: Object.keys(data.transaction_types)
       };
-
-      const score = Math.floor(Math.random() * 11);
-      const scamTransactions = mockTransactions.filter(t => t.isScam).length;
-      const adjustedScore = Math.min(10, score + scamTransactions * 2);
 
       setTransactions(mockTransactions);
       setStats(mockStats);
-      setScamScore(adjustedScore);
+      setScamScore(data.risk_score);
     } catch (error) {
       console.error('Error scanning wallet:', error);
     } finally {
@@ -715,7 +888,7 @@ export default function WalletScanner() {
               </motion.div>
             )}
 
-            {!isLoading && activeTab === 'scanner' && stats && (
+            {!isLoading && activeTab === 'scanner' && walletInfo && (
               <motion.div
                 variants={containerVariants}
                 initial="hidden"
@@ -728,64 +901,114 @@ export default function WalletScanner() {
                 >
                   <StatCard 
                     title="Total Transactions" 
-                    value={stats.totalTransactions} 
+                    value={walletInfo.total_transactions}
+                    tooltip="Total number of transactions for this wallet"
                   />
                   
                   <StatCard 
-                    title="Largest TX" 
-                    value={`${stats.largestTransaction.toFixed(2)} INJ`} 
-                  />
-                  
-                  <StatCard 
-                    title="Smallest TX" 
-                    value={`${stats.smallestTransaction.toFixed(2)} INJ`} 
-                  />
-                  
-                  <StatCard 
-                    title="Security Score" 
-                    value={`${scamScore}/10`}
+                    title="Risk Score" 
+                    value={`${walletInfo.risk_score}/10`}
+                    tooltip="Overall risk assessment score for this wallet"
                   >
                     <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
                       <div 
-                        className={`h-2 rounded-full ${getScamColor(scamScore || 0).replace('text', 'bg')}`} 
-                        style={{ width: `${(scamScore || 0) * 10}%` }}
+                        className={`h-2 rounded-full ${getScamColor(walletInfo.risk_score).replace('text', 'bg')}`} 
+                        style={{ width: `${walletInfo.risk_score * 10}%` }}
                       ></div>
                     </div>
                   </StatCard>
+                  
+                  <StatCard 
+                    title="First TX" 
+                    value={new Date(walletInfo.first_transaction_date).toLocaleDateString()}
+                    tooltip="Date of the first transaction for this wallet"
+                  />
+                  
+                  <StatCard 
+                    title="Last TX" 
+                    value={new Date(walletInfo.last_transaction_date).toLocaleDateString()}
+                    tooltip="Date of the most recent transaction for this wallet"
+                  />
                 </motion.div>
+
+                {walletInfo.suspicious_transactions.length > 0 && (
+                  <motion.div variants={itemVariants}>
+                    <div className="bg-black/50 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+                      <h3 className="text-xl font-bold mb-6">Suspicious Transactions</h3>
+                      <motion.div
+                        variants={containerVariants}
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                      >
+                        {walletInfo.suspicious_transactions.map((tx, index) => (
+                          <SuspiciousTransactionCard 
+                            key={index}
+                            transaction={tx}
+                          />
+                        ))}
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                )}
 
                 <motion.div variants={itemVariants}>
                   <div className="bg-black/50 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
-                    <h3 className="text-xl font-bold mb-4">Transaction Types</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {stats.transactionTypes.map((type: string, index: number) => (
-                        <motion.span 
-                          key={index} 
-                          className="px-3 py-1 bg-purple-900/50 text-purple-200 rounded-full text-sm"
-                          whileHover={{ scale: 1.05 }}
-                        >
-                          {type}
-                        </motion.span>
-                      ))}
+                    <h3 className="text-xl font-bold mb-6">Wallet Analytics</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      <DataVisualizationCard 
+                        title="DApp Usage" 
+                        data={walletInfo.dapp_usage} 
+                        type="bar"
+                      />
+                      <DataVisualizationCard 
+                        title="Message Types" 
+                        data={walletInfo.message_types} 
+                        type="pie"
+                      />
+                      <DataVisualizationCard 
+                        title="Monthly Activity" 
+                        data={walletInfo.monthly_activity} 
+                        type="bar"
+                      />
                     </div>
                   </div>
                 </motion.div>
 
                 <motion.div variants={itemVariants}>
                   <div className="bg-black/50 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
-                    <h3 className="text-xl font-bold mb-6">Recent Transactions</h3>
-                    <motion.div
-                      variants={containerVariants}
-                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-                    >
-                      {transactions.slice(0, 8).map((tx, index) => (
-                        <TransactionCard 
-                          key={index}
-                          transaction={tx}
-                          index={index}
-                        />
-                      ))}
-                    </motion.div>
+                    <h3 className="text-xl font-bold mb-6">Contracts Interacted With</h3>
+                    <DataVisualizationCard 
+                      title="Contract Addresses" 
+                      data={walletInfo.contracts_interacted} 
+                      type="list"
+                    />
+                  </div>
+                </motion.div>
+
+                <motion.div variants={itemVariants}>
+                  <div className="bg-black/50 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+                    <h3 className="text-xl font-bold mb-6">Top Recipients</h3>
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b border-white/10">
+                            <th className="text-left py-2">Address</th>
+                            <th className="text-right py-2">Count</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {walletInfo.top_recipients.map((recipient, index) => (
+                            <tr key={index} className="border-b border-white/5">
+                              <td className="py-2 text-sm text-gray-300 truncate max-w-xs">
+                                {recipient.address}
+                              </td>
+                              <td className="py-2 text-sm text-gray-400 text-right">
+                                {recipient.count}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </motion.div>
               </motion.div>
@@ -829,7 +1052,7 @@ export default function WalletScanner() {
               </motion.div>
             )}
 
-            {!isLoading && !stats && activeTab === 'scanner' && (
+            {!isLoading && !walletInfo && activeTab === 'scanner' && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
