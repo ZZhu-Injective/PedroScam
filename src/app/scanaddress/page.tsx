@@ -25,6 +25,8 @@ interface ScamWallet {
 }
 
 interface WalletInfo {
+  error: any;
+  detail: any;
   address: string;
   total_transactions: number;
   first_transaction_date: string;
@@ -320,8 +322,10 @@ const StatCard = ({ title, value, children, tooltip }: { title: string, value: s
             onMouseEnter={() => setShowTooltip(true)}
             onMouseLeave={() => setShowTooltip(false)}
           >
-            <svg className="w-4 h-4 text-gray-500 cursor-help" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd"></path>
+            <svg className="w-4 h-4 text-gray-500 cursor-help" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <circle cx="12" cy="12" r="10" strokeWidth="2"/>
+              <path d="M12 16v-4" strokeWidth="2" strokeLinecap="round"/>
+              <path d="M12 8h.01" strokeWidth="2" strokeLinecap="round"/>
             </svg>
             {showTooltip && (
               <div className="absolute z-50 w-64 p-2 text-sm text-white bg-gray-900 rounded-lg shadow-lg -top-12 left-6">
@@ -530,6 +534,7 @@ export default function WalletScanner() {
   const [filterDate, setFilterDate] = useState<string>('');
   const [filterAddress, setFilterAddress] = useState<string>('');
   const [walletInfo, setWalletInfo] = useState<WalletInfo | null>(null);
+  const [error, setError] = useState<string | null>(null);
   
   const scannerRef = useRef<HTMLDivElement>(null);
 
@@ -638,14 +643,24 @@ export default function WalletScanner() {
     if (!walletAddress) return;
     
     setIsLoading(true);
+    setWalletInfo(null);
+    setError(null);
     
     try {
-      // Fetch data from the API
       const response = await fetch(`https://api.injectivepedro.com/walletinfo/${walletAddress}/`);
+      
+      if (!response.ok) {
+        throw new Error(`API error: ${response.status} ${response.statusText}`);
+      }
+      
       const data: WalletInfo = await response.json();
+      
+      if (data.error || data.detail) {
+        throw new Error(data.error || data.detail || 'Unknown API error');
+      }
+      
       setWalletInfo(data);
       
-      // Generate mock transactions based on the API data
       const mockTransactions: Transaction[] = [
         {
           hash: data.suspicious_transactions[0]?.hash || '0x4a3b...c82d',
@@ -663,7 +678,7 @@ export default function WalletScanner() {
           message: 'Latest transaction',
           isScam: false
         },
-        ...data.suspicious_transactions.slice(0, 3).map(tx => ({
+        ...(data.suspicious_transactions?.slice(0, 3) || []).map(tx => ({
           hash: tx.hash,
           type: 'Suspicious',
           amount: 0.1,
@@ -675,10 +690,10 @@ export default function WalletScanner() {
 
       const mockStats = {
         totalTransactions: data.total_transactions,
-        largestTransaction: 500, // Mock value
-        smallestTransaction: 0.01, // Mock value
+        largestTransaction: 500, 
+        smallestTransaction: 0.01,
         lastTransaction: mockTransactions[0],
-        transactionTypes: Object.keys(data.transaction_types)
+        transactionTypes: Object.keys(data.transaction_types || {})
       };
 
       setTransactions(mockTransactions);
@@ -686,6 +701,7 @@ export default function WalletScanner() {
       setScamScore(data.risk_score);
     } catch (error) {
       console.error('Error scanning wallet:', error);
+      setError('The address format incorrect.');
     } finally {
       setIsLoading(false);
     }
@@ -829,6 +845,21 @@ export default function WalletScanner() {
                     label={isLoading ? "SCANNING..." : "SCAN WALLET"}
                   />
                 </div>
+                
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="bg-red-900/50 border border-red-500 rounded-xl p-4"
+                  >
+                    <div className="flex items-center">
+                      <svg className="w-6 h-6 text-red-300 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <p className="text-red-200">{error}</p>
+                    </div>
+                  </motion.div>
+                )}
               </motion.div>
             </section>
           )}
@@ -877,7 +908,7 @@ export default function WalletScanner() {
             </section>
           )}
 
-          <section className="relative sm:py-8 py-2 px-2 sm: mx-auto max-w-[1500px]" ref={scannerRef}>
+          <section className="relative sm:py-8 py-2 px-2 sm: mx-auto max-w-[1750px]" ref={scannerRef}>
             {isLoading && (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -912,7 +943,11 @@ export default function WalletScanner() {
                   >
                     <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
                       <div 
-                        className={`h-2 rounded-full ${getScamColor(walletInfo.risk_score).replace('text', 'bg')}`} 
+                        className={`h-2 rounded-full ${
+                          walletInfo.risk_score <= 3 ? 'bg-green-400' :
+                          walletInfo.risk_score <= 6 ? 'bg-yellow-400' :
+                          'bg-red-400'
+                        }`} 
                         style={{ width: `${walletInfo.risk_score * 10}%` }}
                       ></div>
                     </div>
@@ -931,24 +966,6 @@ export default function WalletScanner() {
                   />
                 </motion.div>
 
-                {walletInfo.suspicious_transactions.length > 0 && (
-                  <motion.div variants={itemVariants}>
-                    <div className="bg-black/50 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
-                      <h3 className="text-xl font-bold mb-6">Suspicious Transactions</h3>
-                      <motion.div
-                        variants={containerVariants}
-                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-                      >
-                        {walletInfo.suspicious_transactions.map((tx, index) => (
-                          <SuspiciousTransactionCard 
-                            key={index}
-                            transaction={tx}
-                          />
-                        ))}
-                      </motion.div>
-                    </div>
-                  </motion.div>
-                )}
 
                 <motion.div variants={itemVariants}>
                   <div className="bg-black/50 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
@@ -972,6 +989,57 @@ export default function WalletScanner() {
                     </div>
                   </div>
                 </motion.div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                {walletInfo.suspicious_transactions.length > 0 && (
+                  <motion.div variants={itemVariants}>
+                    <div className="bg-black/50 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+                      <h3 className="text-xl font-bold mb-6">Suspicious Transactions</h3>
+                      <motion.div
+                        variants={containerVariants}
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+                      >
+                        {walletInfo.suspicious_transactions.map((tx, index) => (
+                          <SuspiciousTransactionCard 
+                            key={index}
+                            transaction={tx}
+                          />
+                        ))}
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                )}
+
+                
 
                 <motion.div variants={itemVariants}>
                   <div className="bg-black/50 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
@@ -1052,7 +1120,7 @@ export default function WalletScanner() {
               </motion.div>
             )}
 
-            {!isLoading && !walletInfo && activeTab === 'scanner' && (
+            {!isLoading && !walletInfo && activeTab === 'scanner' && !error && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
