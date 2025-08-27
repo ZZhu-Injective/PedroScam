@@ -408,13 +408,49 @@
       }
   },
   {
-    "contractAddress": "inj12rep7v6hcu6rneyf6c339ezxpvjnmt5nkdsdrv",
+    "contractAddress": "inj168ywqnhghkdrevjp3kgsas24q97t3gkupgdgc4",
     "metadata": {
-      "name": "MIB Special Agents",
-      "address_created": "inj1yjulgwdahfqwhtmslf28cgyejefqadr7se05nd",
-      "total": "100",
-      "images": "public\\scam_images\\mib_special_agents.jpg",
-      "link": "https://injective.talis.art/collection/658ea6ab69087d6f9182c6e1",
+      "name": "Injetive Bilder",
+      "address_created": "inj1y649hqhwyvja6r909k55cxhc54k7x0xmqpxwan",
+      "total": "1365",
+      "images": "public\\scam_images\\injective_bilder.jpg",
+      "link": "https://injective.talis.art/collection/65934e5252dcad3bb5b05ef6",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj1tsuz9ulgx545gecj8t04g2cft73tgun73jfwlk",
+    "metadata": {
+      "name": "Pixl Kidz",
+      "address_created": "inj1jwlncuu676t3qfjdlcwsdgx0gg6jpa8snes4xt",
+      "total": "749",
+      "images": "public\\scam_images\\pixl_kidz.jpg",
+      "link": "https://injective.talis.art/collection/6593d904191503b4ec1b701e",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj1p0kdm00l0j0mk7r7nt6ufkhj2cg8yxqwtrkpm3",
+    "metadata": {
+      "name": "Destiny Punks",
+      "address_created": "inj1plree55zmkq5x6sha9mmx2ukekpurjq4kyhzg4",
+      "total": "2442",
+      "images": "public\\scam_images\\destiny_punks.jpg",
+      "link": "https://injective.talis.art/collection/6594acfc7789111dab2e5fb3",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj1xgngy25x50p20qlddh72d84xfzfyajzjkfscpq",
+    "metadata": {
+      "name": "Doggos",
+      "address_created": "inj1nmawgnsjlj5jm559264dpvkmuys9v0ug65lxwa",
+      "total": "956",
+      "images": "public\\scam_images\\doggos.jpg",
+      "link": "https://injective.talis.art/collection/659689e996076d671aa9043c",
       "reason": "No visible buzz on social platforms, not active anymore.",
       "signed": "Pedro The Raccoon"
       }
