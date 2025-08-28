@@ -455,7 +455,163 @@
       "signed": "Pedro The Raccoon"
       }
   },
-  
+  {
+    "contractAddress": "inj1kha2ek29l3ewemjfkkjdmwnsv06cz8x5wdu5ef",
+    "metadata": {
+      "name": "Lucky Lamas",
+      "address_created": "inj1fl84x4yzqqjmnu8nxe33k398g9zkav569mjeh5",
+      "total": "2190",
+      "images": "public\\scam_images\\lucky_lamas.jpg",
+      "link": "https://injective.talis.art/collection/65988abd99f11c736c279355",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj170tp57srmh8cwhhq9x7spz3qg0gzp7hs3dncnn",
+    "metadata": {
+      "name": "SwordSaga : Warrior Edition",
+      "address_created": "inj1450s308qaw6v057krgr37tmmsl3cs3pkw0cxqn",
+      "total": "1775",
+      "images": "public\\scam_images\\swordsaga.jpg",
+      "link": "https://injective.talis.art/collection/659bb7e2df46b190ac4f5d72",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj18tw7z9hphd5h8gh0mjueavu6dg922kz2v4jcm4",
+    "metadata": {
+      "name": "Baby Light",
+      "address_created": "inj1s643urylsl9xd40f93p07f8w3nlve2vnwnpq6z",
+      "total": "764",
+      "images": "public\\scam_images\\baby_light.jpg",
+      "link": "https://injective.talis.art/collection/659c5ee2ff5754a432a3d032",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj10hx08amyhmekx4f7477pzdmknxs305gmtzmuck",
+    "metadata": {
+      "name": "Injective Kings",
+      "address_created": "inj1qzlmwghgewyp8v0pfv7a244t6ujsayzctvr6nl",
+      "total": "1500",
+      "images": "public\\scam_images\\injective_kings.jpg",
+      "link": "https://injective.talis.art/collection/659e7b6612c7106193d4319d",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj127kwpnczfv3785c48xxz9eqh980rh932cdrp3z",
+    "metadata": {
+      "name": "Injective Vandals",
+      "address_created": "inj18jf3ls8v98374u8eey573jywm2h0acvm964t67",
+      "total": "341",
+      "images": "public\\scam_images\\injective_vandals.jpg",
+      "link": "https://injective.talis.art/collection/65a03292f8714b72f36850a3",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj1k87v67xfw99eycckwwq5pfhczl0n6qyjcm6sva",
+    "metadata": {
+      "name": "Discordels Lands",
+      "address_created": "inj1nyvxc73z8d8kplh95gxyn6sqzdmwqkjq6t7wfq",
+      "total": "341",
+      "images": "public\\scam_images\\discordels_lands.jpg",
+      "link": "https://injective.talis.art/collection/65a0d655bc85979f0a8c0f8c",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj1n448tn8zxpkus472yxzmlvy77ynza4qdez3wk7",
+    "metadata": {
+      "name": "Injective Frogs",
+      "address_created": "inj1wc9s6sestuhjlm632wcvdzr7wdzhwcppkx0vpk",
+      "total": "2952",
+      "images": "public\\scam_images\\injective_frogs.jpg",
+      "link": "https://injective.talis.art/collection/65a277a943ee19451990b10f",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj1n448tn8zxpkus472yxzmlvy77ynza4qdez3wk7",
+    "metadata": {
+      "name": "Injective Frogs",
+      "address_created": "inj1wc9s6sestuhjlm632wcvdzr7wdzhwcppkx0vpk",
+      "total": "2952",
+      "images": "public\\scam_images\\injective_frogs.jpg",
+      "link": "https://injective.talis.art/collection/65a277a943ee19451990b10f",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj17fn69c03xxdpkmxycrd02pnma2mzepx9we5y3d",
+    "metadata": {
+      "name": "SMITH",
+      "address_created": "inj12779ylw27eesravjnuh60zv4ea40c7hz4yu3tl",
+      "total": "3308",
+      "images": "public\\scam_images\\smith.jpg",
+      "link": "https://injective.talis.art/collection/65a5a545bed37e2af5cf7877",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj1pzz8lre9jcddug6395pqeukkpjgzyr8w76tpgx",
+    "metadata": {
+      "name": "Moody",
+      "address_created": "inj1f23mkl2cm89awksaln2n50khrx4xh39djlzyjn",
+      "total": "989",
+      "images": "public\\scam_images\\moody.jpg",
+      "link": "https://injective.talis.art/collection/65a6ec3bbed37e2af527eeca",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj1n0hew9rp84anlqakqa23klskadhfu42mr67j73",
+    "metadata": {
+      "name": "Injective Beanz",
+      "address_created": "inj18ygz3dyg9uyhtm7ay9gqs9chdfxejslgr70u6m",
+      "total": "2457",
+      "images": "public\\scam_images\\injective_beanz.jpg",
+      "link": "https://injective.talis.art/collection/65a87fbb15d89b465bd576eb",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj19syt7zhn4ytvf7xtpw8wml558hz5hh5yjjrszn",
+    "metadata": {
+      "name": "Goblin Royale",
+      "address_created": "inj1fgtfttj0r30r6zjt0zrlg7msn40eg5engcq679",
+      "total": "1465",
+      "images": "public\\scam_images\\goblin_royale.jpg",
+      "link": "https://injective.talis.art/collection/65a9700d15d89b465b3f7e1b",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj19syt7zhn4ytvf7xtpw8wml558hz5hh5yjjrszn",
+    "metadata": {
+      "name": "Goblin Royale",
+      "address_created": "inj1fgtfttj0r30r6zjt0zrlg7msn40eg5engcq679",
+      "total": "1465",
+      "images": "public\\scam_images\\goblin_royale.jpg",
+      "link": "https://injective.talis.art/collection/65a9700d15d89b465b3f7e1b",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+
 
 
   
