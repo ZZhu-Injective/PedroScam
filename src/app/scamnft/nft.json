@@ -611,6 +611,66 @@
       "signed": "Pedro The Raccoon"
       }
   },
+  {
+    "contractAddress": "inj13pcvuevzmfsaqwxzzs03uvv3a46pezuejhzsjv",
+    "metadata": {
+      "name": "ShowOffs",
+      "address_created": "inj17fsdj3ng6zn7fw40q7nd0ath2qmnwl6t9fjuaw",
+      "total": "506",
+      "images": "public\\scam_images\\showoffs.jpg",
+      "link": "https://injective.talis.art/collection/65a97615a0734e6c7fe12220",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj1vf65yvzvu5f0grw4qfjkzhte4s3eh5pk6af5qf",
+    "metadata": {
+      "name": "orBits",
+      "address_created": "inj186aktj4pv9a5pw5905z54x7hme97mj8px9prl6",
+      "total": "8773",
+      "images": "public\\scam_images\\orbits.jpg",
+      "link": "https://injective.talis.art/collection/65aaa7ce7543ec7e98b71ea8",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj1sqnw3nwmctz57kw6ut0gstvf8z4n6crzztr4fy",
+    "metadata": {
+      "name": "INJ Hearts",
+      "address_created": "inj1rq2mpswjgvvu4359desy2mdwuunyvcv9vepukz",
+      "total": "2987",
+      "images": "public\\scam_images\\inj_hearts.jpg",
+      "link": "https://injective.talis.art/collection/65abbdcd15d89b465befc1de",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj1uj89tq5tw20wc6chnj92wwq2jd9e6x0xyz2xq2",
+    "metadata": {
+      "name": "Injas",
+      "address_created": "inj1anhlu4dzpqsajufy3lw5wqfg53fpyqsq57qv7m",
+      "total": "1042",
+      "images": "public\\scam_images\\injas.jpg",
+      "link": "https://injective.talis.art/collection/65ac8e0fd635c7f3e1ae6530",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj1uhwh2mm8js8l8xxhhxmxc9h4rhzvalqjf70xmt",
+    "metadata": {
+      "name": "Venom GODS",
+      "address_created": "inj1yvt3rmm4tltmtfd9x0lqga9nta4azn27lpdgm4",
+      "total": "498",
+      "images": "public\\scam_images\\venom_gods.jpg",
+      "link": "https://injective.talis.art/collection/65b08721f57dc8b0e76d1298",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
 
 
 
