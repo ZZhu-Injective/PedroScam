@@ -29,21 +29,20 @@ interface Socials {
   discord?: string;
 }
 
-// Map the new data structure to the old one for compatibility
 const mapToLegacyStructure = (project: ScamProject, category: string) => {
-  // Extract the image filename from the path
   const imagePath = project.metadata.images.replace(/\\/g, '/');
-  const imageName = imagePath.split('/').pop() || 'default.jpg';
+  const cleanPath = imagePath.replace(/^public\//, '');
+  const imageName = cleanPath.split('/').pop() || 'default.jpg';
   
   return {
     id: project.contractAddress,
     name: project.metadata.name,
-    imageUrl: `/scam_images/${imageName}`,
+    imageUrl: `/${cleanPath}`,
     category: category,
     dateReported: "Unknown",
     reportedBy: project.metadata.signed,
     description: project.metadata.reason,
-    severity: project.metadata.risk || 'high', // Default to 'high' if risk is missing
+    severity: project.metadata.risk || 'high', 
     website: project.metadata.link,
     socials: {} as Socials,
     chain: "Injective",
@@ -58,6 +57,7 @@ interface ProjectCardProps {
 
 const ScamProjectCard = ({ project, index }: ProjectCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [imageError, setImageError] = useState(false);
 
   const getSeverityColor = () => {
     switch(project.severity) {
@@ -68,7 +68,6 @@ const ScamProjectCard = ({ project, index }: ProjectCardProps) => {
     }
   };
 
-  // Check if socials exist and have any values
   const hasSocials = project.socials && (
     project.socials.twitter || 
     project.socials.telegram || 
@@ -83,13 +82,22 @@ const ScamProjectCard = ({ project, index }: ProjectCardProps) => {
       className="relative overflow-hidden rounded-2xl bg-black/20 shadow-2xl backdrop-blur-sm border border-white/10 hover:border-white/30 transition-all duration-300"
     >
       <div className="relative w-full h-48 overflow-hidden">
-        <Image
-          src={project.imageUrl}
-          alt={project.name}
-          fill
-          className="object-cover"
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        />
+        {imageError ? (
+          <div className="w-full h-full bg-gray-800 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+          </div>
+        ) : (
+          <Image
+            src={project.imageUrl}
+            alt={project.name}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            onError={() => setImageError(true)}
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
         <div className="absolute bottom-4 left-4 right-4">
           <div className="flex justify-between items-end">
@@ -244,7 +252,7 @@ export default function ScamProjectsPage() {
                 name: "Takeda",
                 address_created: "inj1d4secujm9c5wq3frcp9ssfcjqv0f9ul434tnvt",
                 total: "352",
-                images: "public/scam_images/takeda.jpg",
+                images: "scam_images/takeda.jpg",
                 link: "https://injective.talis.art/collection/64b52d28f71ecb27c797cc00",
                 reason: "No visible buzz on social platforms, not active anymore.",
                 signed: "Pedro The Raccoon",
@@ -257,7 +265,7 @@ export default function ScamProjectsPage() {
                 name: "Injective Monkeys",
                 address_created: "inj1mque2syfzukfeymva0nrhgtmypykp96mzt744h",
                 total: "538",
-                images: "public/scam_images/injective_monkeys.jpg",
+                images: "scam_images/injective_monkeys.jpg",
                 link: "https://injective.talis.art/collection/64b7cf9809c1610f87cc6e22",
                 reason: "No visible buzz on social platforms, not active anymore.",
                 signed: "Pedro The Raccoon",
@@ -456,17 +464,17 @@ export default function ScamProjectsPage() {
                   <div className="absolute inset-0 bg-black/70 rounded-xl group-hover:opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center p-6">
                     <div className="bg-green-500/20 p-3 rounded-lg mb-4">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
                     </div>
                     <h3 className="text-lg font-bold text-center mb-2">How to Report</h3>
-                    <p className="text-gray-300 text-center text-sm">Hover for reporting process</p>
+                    <p className="text-gray-300 text-sm">Hover for reporting process</p>
                   </div>
                   
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-5 flex flex-col justify-center">
                     <h3 className="text-lg font-bold mb-4 text-green-400 flex items-center">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m3 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                       </svg>
                       Report Scams
                     </h3>
@@ -491,7 +499,7 @@ export default function ScamProjectsPage() {
                   </div>
                 </div>
 
-                <div className="group relative bg-gradient-to-br from-yellow-900/20 to-yellow-800/10 rounded-xl p-1 h-48 cursor-pointer">
+                <div className="group relative bg-gradient-to-br from-yellow-900/20 to-yellow-800/10 rounded-xl p-13 h-48 cursor-pointer">
                   <div className="absolute inset-0 bg-black/70 rounded-xl group-hover:opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center p-6">
                     <div className="bg-yellow-500/20 p-3 rounded-lg mb-4">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -505,7 +513,7 @@ export default function ScamProjectsPage() {
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-5 flex flex-col justify-center">
                     <h3 className="text-lg font-bold mb-4 text-yellow-400 flex items-center">
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 13 9 9 0 0118 0z" />
                       </svg>
                       Important Notice
                     </h3>

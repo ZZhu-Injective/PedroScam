@@ -132,18 +132,6 @@
       }
   },  
   {
-    "contractAddress": "inj1l278lj7papf37xs3tmgrwz5cstryuqxshnekdw",
-    "metadata": {
-      "name": "Apective",
-      "address_created": "inj1z7wkcakdkacd9m2xdret5v4ktx760hfugn007z",
-      "total": "551",
-      "images": "public\\scam_images\\appective.jpg",
-      "link": "https://injective.talis.art/collection/6523a99671d8326af193c004",
-      "reason": "No visible buzz on social platforms, not active anymore.",
-      "signed": "Pedro Team"
-      }
-  },
-  {
     "contractAddress": "inj16m9n05n80uylxaafk32qyha38fmwcfpssnpfak",
     "metadata": {
       "name": "INJ BOYS",
@@ -317,7 +305,7 @@
       "name": ".monkes",
       "address_created": "inj1g86wkwgrk5s9wlpjxtxksa0u2jetvk88cperv4",
       "total": "997",
-      "images": "public\\scam_images\\.monkes.jpg",
+      "images": "public/scam_images/.monkes.jpg",
       "link": "https://injective.talis.art/collection/65836f20757a8ae4de19e7e0",
       "reason": "No visible buzz on social platforms, not active anymore.",
       "signed": "Pedro Team"
@@ -367,18 +355,6 @@
       "total": "995",
       "images": "public\\scam_images\\captainj.jpg",
       "link": "https://injective.talis.art/collection/658a202db2811046ce9524bc",
-      "reason": "No visible buzz on social platforms, not active anymore.",
-      "signed": "Pedro Team"
-      }
-  },
-  {
-    "contractAddress": "inj1es6ng6jy5pgmaznhdcjxmwyk995upwnep270sy",
-    "metadata": {
-      "name": "Injective Mobs",
-      "address_created": "inj1rkz0sk9vjv0l9gdzltwpx2uefk6s8zhe5jfs4p",
-      "total": "1739",
-      "images": "public\\scam_images\\injective_mobs.jpg",
-      "link": "https://injective.talis.art/collection/658d682d55e17c5071e3d20a",
       "reason": "No visible buzz on social platforms, not active anymore.",
       "signed": "Pedro Team"
       }
@@ -540,18 +516,6 @@
       }
   },
   {
-    "contractAddress": "inj1n448tn8zxpkus472yxzmlvy77ynza4qdez3wk7",
-    "metadata": {
-      "name": "Injective Frogs",
-      "address_created": "inj1wc9s6sestuhjlm632wcvdzr7wdzhwcppkx0vpk",
-      "total": "2952",
-      "images": "public\\scam_images\\injective_frogs.jpg",
-      "link": "https://injective.talis.art/collection/65a277a943ee19451990b10f",
-      "reason": "No visible buzz on social platforms, not active anymore.",
-      "signed": "Pedro Team"
-      }
-  },
-  {
     "contractAddress": "inj17fn69c03xxdpkmxycrd02pnma2mzepx9we5y3d",
     "metadata": {
       "name": "SMITH",
@@ -583,18 +547,6 @@
       "total": "2457",
       "images": "public\\scam_images\\injective_beanz.jpg",
       "link": "https://injective.talis.art/collection/65a87fbb15d89b465bd576eb",
-      "reason": "No visible buzz on social platforms, not active anymore.",
-      "signed": "Pedro Team"
-      }
-  },
-  {
-    "contractAddress": "inj19syt7zhn4ytvf7xtpw8wml558hz5hh5yjjrszn",
-    "metadata": {
-      "name": "Goblin Royale",
-      "address_created": "inj1fgtfttj0r30r6zjt0zrlg7msn40eg5engcq679",
-      "total": "1465",
-      "images": "public\\scam_images\\goblin_royale.jpg",
-      "link": "https://injective.talis.art/collection/65a9700d15d89b465b3f7e1b",
       "reason": "No visible buzz on social platforms, not active anymore.",
       "signed": "Pedro Team"
       }
@@ -751,18 +703,6 @@
       "total": "441",
       "images": "public\\scam_images\\plague_doctor.jpg",
       "link": "https://injective.talis.art/collection/65c09fe91a4810398ea173bc",
-      "reason": "No visible buzz on social platforms, not active anymore.",
-      "signed": "Pedro Team"
-      }
-  },
-  {
-    "contractAddress": "inj1zpwye46trrvk305n554zr8hks64t5t4wkluuka",
-    "metadata": {
-      "name": "BOTS",
-      "address_created": "inj1unvyfhqcqcze2u9fj9e4mxgng5vy43gcs597jh",
-      "total": "3605",
-      "images": "public\\scam_images\\BOTS.jpg",
-      "link": "https://injective.talis.art/collection/65c45c8246484fe16f85a374",
       "reason": "No visible buzz on social platforms, not active anymore.",
       "signed": "Pedro Team"
       }
