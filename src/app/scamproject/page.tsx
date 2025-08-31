@@ -4,26 +4,58 @@ import Head from "next/head";
 import Image from "next/image";
 import { useState, useEffect } from 'react';
 
+// Import JSON data directly
+import nftData from '@/app/scam/nft.json';
+
+// Define the new interface based on your JSON structure
 interface ScamProject {
-  id: string;
-  name: string;
-  imageUrl: string;
-  category: string;
-  dateReported: string;
-  reportedBy: string;
-  description: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  website?: string;
-  socials?: {
-    twitter?: string;
-    telegram?: string;
-    discord?: string;
+  contractAddress: string;
+  metadata: {
+    name: string;
+    address_created: string;
+    total: string;
+    images: string;
+    link: string;
+    reason: string;
+    signed: string;
+    risk?: 'low' | 'medium' | 'high' | 'critical'; // Made optional
   };
-  chain: string;
-  contracts: string[];
 }
 
-const ScamProjectCard = ({ project }: { project: ScamProject }) => {
+// Define socials interface
+interface Socials {
+  twitter?: string;
+  telegram?: string;
+  discord?: string;
+}
+
+// Map the new data structure to the old one for compatibility
+const mapToLegacyStructure = (project: ScamProject, category: string) => {
+  // Extract the image filename from the path
+  const imagePath = project.metadata.images.replace(/\\/g, '/');
+  const imageName = imagePath.split('/').pop() || 'default.jpg';
+  
+  return {
+    id: project.contractAddress,
+    name: project.metadata.name,
+    imageUrl: `/scam_images/${imageName}`,
+    category: category,
+    dateReported: "Unknown",
+    reportedBy: project.metadata.signed,
+    description: project.metadata.reason,
+    severity: project.metadata.risk || 'high', // Default to 'high' if risk is missing
+    website: project.metadata.link,
+    socials: {} as Socials,
+    chain: "Injective",
+    contracts: [project.contractAddress]
+  };
+};
+
+interface ProjectCardProps {
+  project: ReturnType<typeof mapToLegacyStructure>;
+}
+
+const ScamProjectCard = ({ project }: ProjectCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const getSeverityColor = () => {
@@ -35,6 +67,13 @@ const ScamProjectCard = ({ project }: { project: ScamProject }) => {
       default: return 'bg-gray-900/50 text-gray-200';
     }
   };
+
+  // Check if socials exist and have any values
+  const hasSocials = project.socials && (
+    project.socials.twitter || 
+    project.socials.telegram || 
+    project.socials.discord
+  );
 
   return (
     <motion.div
@@ -69,8 +108,7 @@ const ScamProjectCard = ({ project }: { project: ScamProject }) => {
       <div className="p-5">
         <div className="flex justify-between items-start mb-3">
           <div>
-            <p className="text-sm text-gray-400">Reported: {project.dateReported}</p>
-            <p className="text-sm text-gray-400">By: {project.reportedBy}</p>
+            <p className="text-sm text-gray-400">Reported by: {project.reportedBy}</p>
           </div>
           {project.website && (
             <a 
@@ -79,7 +117,7 @@ const ScamProjectCard = ({ project }: { project: ScamProject }) => {
               rel="noopener noreferrer"
               className="text-xs bg-white/10 hover:bg-white/20 px-2 py-1 rounded transition-colors"
             >
-              Website
+              Talis
             </a>
           )}
         </div>
@@ -102,7 +140,7 @@ const ScamProjectCard = ({ project }: { project: ScamProject }) => {
           >
             {project.contracts.length > 0 && (
               <div>
-                <h4 className="text-xs font-bold text-gray-400 mb-1">CONTRACTS</h4>
+                <h4 className="text-xs font-bold text-gray-400 mb-1">CONTRACT ADDRESS</h4>
                 <div className="space-y-1">
                   {project.contracts.map((contract, i) => (
                     <div key={i} className="text-xs bg-black/50 p-2 rounded break-all font-mono">
@@ -113,7 +151,7 @@ const ScamProjectCard = ({ project }: { project: ScamProject }) => {
               </div>
             )}
 
-            {project.socials && (
+            {hasSocials && (
               <div>
                 <h4 className="text-xs font-bold text-gray-400 mb-1">SOCIALS</h4>
                 <div className="flex gap-2">
@@ -158,8 +196,8 @@ const ScamProjectCard = ({ project }: { project: ScamProject }) => {
 };
 
 export default function ScamProjectsPage() {
-  const [projects, setProjects] = useState<ScamProject[]>([]);
-  const [filteredProjects, setFilteredProjects] = useState<ScamProject[]>([]);
+  const [projects, setProjects] = useState<ReturnType<typeof mapToLegacyStructure>[]>([]);
+  const [filteredProjects, setFilteredProjects] = useState<ReturnType<typeof mapToLegacyStructure>[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
@@ -167,125 +205,69 @@ export default function ScamProjectsPage() {
   const [chainFilter, setChainFilter] = useState('all');
 
   useEffect(() => {
-    // Simulate API fetch
-    const fetchScamProjects = async () => {
+    const loadScamProjects = () => {
       setIsLoading(true);
       try {
-        // Mock data - in a real app, this would come from an API
-        const mockProjects: ScamProject[] = [
-          {
-            id: '1',
-            name: 'Injective Yield Farm',
-            imageUrl: '/scam1.webp', // Replace with actual images
-            category: 'DeFi',
-            dateReported: '2023-06-15',
-            reportedBy: 'Community',
-            description: 'Promised unrealistic yields and disappeared with user funds after 2 weeks of operation. The team deleted all social media accounts and the website went offline.',
-            severity: 'critical',
-            website: 'https://fake-injective-yield.com',
-            socials: {
-              twitter: 'https://twitter.com/fakeinjective',
-              telegram: 'https://t.me/fakeinjective',
-            },
-            chain: 'Injective',
-            contracts: ['inj1xyz...abc123', 'inj1def...ghi456']
-          },
-          {
-            id: '2',
-            name: 'Cosmos NFT Scam',
-            imageUrl: '/scam2.webp',
-            category: 'NFT',
-            dateReported: '2023-06-10',
-            reportedBy: 'Security Team',
-            description: 'Fake NFT collection that copied artwork from legitimate projects. After selling out, the creators rug pulled and abandoned the project.',
-            severity: 'high',
-            chain: 'Cosmos',
-            contracts: ['cosmos1xyz...abc123']
-          },
-          {
-            id: '3',
-            name: 'Ethereum Token Scam',
-            imageUrl: '/scam3.webp',
-            category: 'Token',
-            dateReported: '2023-06-05',
-            reportedBy: 'User Report',
-            description: 'Token with hidden transfer fees that drained wallets when users tried to sell. The contract had malicious code that wasn\'t visible in the verified source.',
-            severity: 'high',
-            chain: 'Ethereum',
-            contracts: ['0x1234...5678']
-          },
-          {
-            id: '4',
-            name: 'Polygon Fake Airdrop',
-            imageUrl: '/scam4.webp',
-            category: 'Airdrop',
-            dateReported: '2023-05-28',
-            reportedBy: 'Security Team',
-            description: 'Fake airdrop that required users to connect wallets and sign transactions that drained funds.',
-            severity: 'medium',
-            chain: 'Polygon',
-            contracts: ['0xabcd...efgh']
-          },
-          {
-            id: '5',
-            name: 'BSC Honeypot',
-            imageUrl: '/scam5.webp',
-            category: 'Token',
-            dateReported: '2023-05-20',
-            reportedBy: 'Community',
-            description: 'Token that could be bought but not sold due to hidden contract restrictions.',
-            severity: 'medium',
-            chain: 'BSC',
-            contracts: ['0x9876...5432']
-          },
-          {
-            id: '6',
-            name: 'Solana Fake Wallet',
-            imageUrl: '/scam6.webp',
-            category: 'Wallet',
-            dateReported: '2023-05-15',
-            reportedBy: 'Security Team',
-            description: 'Fake wallet app that stole seed phrases when users tried to import wallets.',
-            severity: 'critical',
-            chain: 'Solana',
-            contracts: []
-          },
-          {
-            id: '7',
-            name: 'Avalanche Fake DEX',
-            imageUrl: '/scam7.webp',
-            category: 'Exchange',
-            dateReported: '2023-05-10',
-            reportedBy: 'User Report',
-            description: 'Fake decentralized exchange that front-ran trades and stole funds.',
-            severity: 'high',
-            chain: 'Avalanche',
-            contracts: ['0x2468...1357']
-          },
-          {
-            id: '8',
-            name: 'Fantom Phishing',
-            imageUrl: '/scam8.webp',
-            category: 'Phishing',
-            dateReported: '2023-05-01',
-            reportedBy: 'Security Team',
-            description: 'Phishing site impersonating a legitimate Fantom project to steal wallet credentials.',
-            severity: 'low',
-            chain: 'Fantom',
-            contracts: []
-          }
+        const allProjects: ReturnType<typeof mapToLegacyStructure>[] = [];
+        
+        const categoryData = [
+          { data: nftData, category: 'nft' },
         ];
         
-        setProjects(mockProjects);
-        setFilteredProjects(mockProjects);
+        // Process each category
+        categoryData.forEach(({ data, category }) => {
+          if (data && Array.isArray(data)) {
+            const mappedData = data.map(project => mapToLegacyStructure(project, category));
+            allProjects.push(...mappedData);
+          }
+        });
+        
+        // If no data was loaded, use fallback data
+        if (allProjects.length === 0) {
+          console.log("Using fallback data");
+          const fallbackData: ScamProject[] = [
+            {
+              contractAddress: "inj1dam75drlqmg2hll0pt37005dlc3a5t9dqsme8y",
+              metadata: {
+                name: "Takeda",
+                address_created: "inj1d4secujm9c5wq3frcp9ssfcjqv0f9ul434tnvt",
+                total: "352",
+                images: "public/scam_images/takeda.jpg",
+                link: "https://injective.talis.art/collection/64b52d28f71ecb27c797cc00",
+                reason: "No visible buzz on social platforms, not active anymore.",
+                signed: "Pedro The Raccoon",
+                risk: "high"
+              }
+            },
+            {
+              contractAddress: "inj1xp4wlleaj05rd5hp9r4rg5vhuahpm37qaq9z0h",
+              metadata: {
+                name: "Injective Monkeys",
+                address_created: "inj1mque2syfzukfeymva0nrhgtmypykp96mzt744h",
+                total: "538",
+                images: "public/scam_images/injective_monkeys.jpg",
+                link: "https://injective.talis.art/collection/64b7cf9809c1610f87cc6e22",
+                reason: "No visible buzz on social platforms, not active anymore.",
+                signed: "Pedro The Raccoon",
+                risk: "high"
+              }
+            }
+          ];
+          
+          const mappedFallback = fallbackData.map(project => mapToLegacyStructure(project, 'nft'));
+          allProjects.push(...mappedFallback);
+        }
+        
+        setProjects(allProjects);
+        setFilteredProjects(allProjects);
       } catch (error) {
-        console.error('Error fetching scam projects:', error);
+        console.error('Error loading scam projects:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchScamProjects();
+    loadScamProjects();
   }, []);
 
   useEffect(() => {
@@ -336,7 +318,7 @@ export default function ScamProjectsPage() {
         </div>
 
         <div className="relative z-10">
-          <section className="flex items-center justify-center py-16 text-center relative overflow-hidden">
+          <section className="flex items-center justify-center pt-10 text-center relative overflow-hidden">
             <motion.div
               initial={{ opacity: 0, y: -50 }}
               animate={{ opacity: 1, y: 0 }}
@@ -349,17 +331,8 @@ export default function ScamProjectsPage() {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2, duration: 0.8 }}
               >
-                Scam Projects Database
+                Scam Projects
               </motion.h1>
-              
-              <motion.p
-                className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4, duration: 0.8 }}
-              >
-                A community-maintained database of known scam projects, fake airdrops, and malicious contracts.
-              </motion.p>
               
               <motion.div
                 initial={{ opacity: 0, scaleX: 0 }}
@@ -370,59 +343,8 @@ export default function ScamProjectsPage() {
             </motion.div>
           </section>
 
-          <section className="px-4 max-w-7xl mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-              <div className="md:col-span-2">
-                <input
-                  type="text"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search projects..."
-                  className="w-full bg-black/70 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-white/50"
-                />
-              </div>
-              <select
-                value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
-                className="bg-black/70 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-white/50"
-              >
-                <option value="all">All Categories</option>
-                {categories.map(category => (
-                  <option key={category} value={category}>{category}</option>
-                ))}
-              </select>
-              <select
-                value={severityFilter}
-                onChange={(e) => setSeverityFilter(e.target.value)}
-                className="bg-black/70 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-white/50"
-              >
-                <option value="all">All Severities</option>
-                {severities.map(severity => (
-                  <option key={severity} value={severity}>{severity.charAt(0).toUpperCase() + severity.slice(1)}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {isLoading ? (
-                Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="h-80 bg-black/20 rounded-2xl animate-pulse" />
-                ))
-              ) : filteredProjects.length > 0 ? (
-                filteredProjects.map(project => (
-                  <ScamProjectCard key={project.id} project={project} />
-                ))
-              ) : (
-                <div className="col-span-full text-center py-16">
-                  <h3 className="text-xl font-bold mb-2">No projects found</h3>
-                  <p className="text-gray-400">Try adjusting your filters</p>
-                </div>
-              )}
-            </div>
-          </section>
-
-          <section className="py-16 px-4 max-w-7xl mx-auto">
-            <div className="bg-black/50 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
+          <section className="py-4 px-4 max-w-[1500px] mx-auto">
+            <div className="bg-black/50 border border-white/10 rounded-2xl p-2 backdrop-blur-sm">
               <h2 className="text-2xl font-bold mb-6">About This Database</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
@@ -472,6 +394,57 @@ export default function ScamProjectsPage() {
                   </div>
                 </div>
               </div>
+            </div>
+          </section>
+
+          <section className="px-4 max-w-[1500px] mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+              <div className="md:col-span-2">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  placeholder="Search projects..."
+                  className="w-full bg-black/70 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-white/50"
+                />
+              </div>
+              <select
+                value={categoryFilter}
+                onChange={(e) => setCategoryFilter(e.target.value)}
+                className="bg-black/70 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-white/50"
+              >
+                <option value="all">All Categories</option>
+                {categories.map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+              <select
+                value={severityFilter}
+                onChange={(e) => setSeverityFilter(e.target.value)}
+                className="bg-black/70 border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:ring-1 focus:ring-white/50"
+              >
+                <option value="all">All Severities</option>
+                {severities.map(severity => (
+                  <option key={severity} value={severity}>{severity.charAt(0).toUpperCase() + severity.slice(1)}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {isLoading ? (
+                Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="h-80 bg-black/20 rounded-2xl animate-pulse" />
+                ))
+              ) : filteredProjects.length > 0 ? (
+                filteredProjects.map(project => (
+                  <ScamProjectCard key={project.id} project={project} />
+                ))
+              ) : (
+                <div className="col-span-full text-center py-16">
+                  <h3 className="text-xl font-bold mb-2">No projects found</h3>
+                  <p className="text-gray-400">Try adjusting your filters</p>
+                </div>
+              )}
             </div>
           </section>
         </div>
