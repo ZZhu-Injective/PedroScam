@@ -53,9 +53,10 @@ const mapToLegacyStructure = (project: ScamProject, category: string) => {
 
 interface ProjectCardProps {
   project: ReturnType<typeof mapToLegacyStructure>;
+  index: number;
 }
 
-const ScamProjectCard = ({ project }: ProjectCardProps) => {
+const ScamProjectCard = ({ project, index }: ProjectCardProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const getSeverityColor = () => {
@@ -78,7 +79,7 @@ const ScamProjectCard = ({ project }: ProjectCardProps) => {
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.3, delay: index * 0.05 }}
       className="relative overflow-hidden rounded-2xl bg-black/20 shadow-2xl backdrop-blur-sm border border-white/10 hover:border-white/30 transition-all duration-300"
     >
       <div className="relative w-full h-48 overflow-hidden">
@@ -194,14 +195,26 @@ const ScamProjectCard = ({ project }: ProjectCardProps) => {
   );
 };
 
+// Fisher-Yates shuffle algorithm for randomizing array
+const shuffleArray = (array: any[]) => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
 export default function ScamProjectsPage() {
   const [projects, setProjects] = useState<ReturnType<typeof mapToLegacyStructure>[]>([]);
   const [filteredProjects, setFilteredProjects] = useState<ReturnType<typeof mapToLegacyStructure>[]>([]);
+  const [displayedProjects, setDisplayedProjects] = useState<ReturnType<typeof mapToLegacyStructure>[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [severityFilter, setSeverityFilter] = useState('all');
   const [chainFilter, setChainFilter] = useState('all');
+  const [isShuffling, setIsShuffling] = useState(false);
 
   useEffect(() => {
     const loadScamProjects = () => {
@@ -259,6 +272,8 @@ export default function ScamProjectsPage() {
         
         setProjects(allProjects);
         setFilteredProjects(allProjects);
+        // Randomize the initial display order
+        setDisplayedProjects(shuffleArray(allProjects));
       } catch (error) {
         console.error('Error loading scam projects:', error);
       } finally {
@@ -288,7 +303,16 @@ export default function ScamProjectsPage() {
     });
     
     setFilteredProjects(filtered);
+    setDisplayedProjects(shuffleArray(filtered));
   }, [searchTerm, categoryFilter, severityFilter, chainFilter, projects]);
+
+  const handleShuffle = () => {
+    setIsShuffling(true);
+    setDisplayedProjects(shuffleArray([...filteredProjects]));
+    
+    // Reset shuffling state after animation completes
+    setTimeout(() => setIsShuffling(false), 500);
+  };
 
   const categories = [...new Set(projects.map(p => p.category))];
   const chains = [...new Set(projects.map(p => p.chain))];
@@ -510,7 +534,7 @@ export default function ScamProjectsPage() {
           </section>
 
           <section className="px-4 max-w-[1500px] mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-8">
               <div className="md:col-span-2">
                 <input
                   type="text"
@@ -540,16 +564,40 @@ export default function ScamProjectsPage() {
                   <option key={severity} value={severity}>{severity.charAt(0).toUpperCase() + severity.slice(1)}</option>
                 ))}
               </select>
+              <button
+                onClick={handleShuffle}
+                disabled={isShuffling}
+                className="bg-black/70 border border-white/20 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                <motion.svg
+                  animate={{ rotate: isShuffling ? 180 : 0 }}
+                  transition={{ duration: 0.5 }}
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-5 w-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </motion.svg>
+                Shuffle
+              </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <motion.div 
+              key={displayedProjects.length} // This forces re-animation when projects change
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            >
               {isLoading ? (
                 Array.from({ length: 8 }).map((_, i) => (
                   <div key={i} className="h-80 bg-black/20 rounded-2xl animate-pulse" />
                 ))
-              ) : filteredProjects.length > 0 ? (
-                filteredProjects.map(project => (
-                  <ScamProjectCard key={project.id} project={project} />
+              ) : displayedProjects.length > 0 ? (
+                displayedProjects.map((project, index) => (
+                  <ScamProjectCard key={project.id} project={project} index={index} />
                 ))
               ) : (
                 <div className="col-span-full text-center py-16">
@@ -557,7 +605,7 @@ export default function ScamProjectsPage() {
                   <p className="text-gray-400">Try adjusting your filters</p>
                 </div>
               )}
-            </div>
+            </motion.div>
           </section>
         </div>
       </div>
