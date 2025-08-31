@@ -18,7 +18,7 @@ interface ScamProject {
     link: string;
     reason: string;
     signed: string;
-    risk?: 'low' | 'medium' | 'high' | 'critical'; // Made optional
+    risk?: 'low' | 'medium' | 'high' 
   };
 }
 
@@ -63,7 +63,6 @@ const ScamProjectCard = ({ project }: ProjectCardProps) => {
       case 'low': return 'bg-yellow-900/50 text-yellow-200';
       case 'medium': return 'bg-orange-900/50 text-orange-200';
       case 'high': return 'bg-red-900/50 text-red-200';
-      case 'critical': return 'bg-purple-900/50 text-purple-200';
       default: return 'bg-gray-900/50 text-gray-200';
     }
   };
@@ -293,7 +292,7 @@ export default function ScamProjectsPage() {
 
   const categories = [...new Set(projects.map(p => p.category))];
   const chains = [...new Set(projects.map(p => p.chain))];
-  const severities: ('low' | 'medium' | 'high' | 'critical')[] = ['low', 'medium', 'high', 'critical'];
+  const severities: ('low' | 'medium' | 'high')[] = ['low', 'medium', 'high'];
 
   return (
     <>
@@ -344,53 +343,166 @@ export default function ScamProjectsPage() {
           </section>
 
           <section className="py-4 px-4 max-w-[1500px] mx-auto">
-            <div className="bg-black/50 border border-white/10 rounded-2xl p-2 backdrop-blur-sm">
-              <h2 className="text-2xl font-bold mb-6">About This Database</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-lg font-bold mb-4">How We Identify Scams</h3>
-                  <ul className="space-y-3 text-gray-300">
-                    <li className="flex items-start">
-                      <span className="text-green-400 mr-2">✓</span>
-                      <span>Community reports from verified sources</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-400 mr-2">✓</span>
-                      <span>Smart contract analysis for malicious code</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-400 mr-2">✓</span>
-                      <span>Verification of team disappearance or fund movement</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-400 mr-2">✓</span>
-                      <span>Confirmed reports of stolen funds</span>
-                    </li>
-                  </ul>
+            <div className="bg-black/50 border border-white/10 rounded-2xl p-6 backdrop-blur-sm">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="group relative bg-gradient-to-br from-blue-900/20 to-blue-800/10 rounded-xl p-1 h-48 cursor-pointer">
+                  <div className="absolute inset-0 bg-black/70 rounded-xl group-hover:opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center p-6">
+                    <div className="bg-blue-500/20 p-3 rounded-lg mb-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-bold text-center mb-2">How We Identify Scams</h3>
+                    <p className="text-gray-300 text-center text-sm">Hover to see our methods</p>
+                  </div>
+                  
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-5 flex flex-col justify-center">
+                    <h3 className="text-lg font-bold mb-4 text-blue-400 flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                      Identification Methods
+                    </h3>
+                    <ul className="space-y-2">
+                      <li className="flex items-start">
+                        <span className="text-green-400 mr-2 mt-1 text-xs">✓</span>
+                        <span className="text-sm">Community reports from verified sources</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-green-400 mr-2 mt-1 text-xs">✓</span>
+                        <span className="text-sm">Protecting Injective Fam</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-green-400 mr-2 mt-1 text-xs">✓</span>
+                        <span className="text-sm">Team disappearance verification</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-green-400 mr-2 mt-1 text-xs">✓</span>
+                        <span className="text-sm">Confirmed stolen funds reports</span>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-lg font-bold mb-4">Severity Levels</h3>
-                  <div className="space-y-3">
-                    <div className="flex items-center">
-                      <span className="w-3 h-3 rounded-full bg-purple-500 mr-2"></span>
-                      <span className="font-medium">Critical</span>
-                      <span className="text-gray-400 ml-2">Funds stolen or high risk</span>
+
+                <div className="group relative bg-gradient-to-br from-purple-900/20 to-purple-800/10 rounded-xl p-1 h-48 cursor-pointer">
+                  <div className="absolute inset-0 bg-black/70 rounded-xl group-hover:opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center p-6">
+                    <div className="bg-purple-500/20 p-3 rounded-lg mb-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
                     </div>
-                    <div className="flex items-center">
-                      <span className="w-3 h-3 rounded-full bg-red-500 mr-2"></span>
-                      <span className="font-medium">High</span>
-                      <span className="text-gray-400 ml-2">Confirmed malicious activity</span>
+                    <h3 className="text-lg font-bold text-center mb-2">Severity Levels</h3>
+                    <p className="text-gray-300 text-center text-sm">Hover to understand risks</p>
+                  </div>
+                  
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-5 flex flex-col justify-center">
+                    <h3 className="text-lg font-bold mb-4 text-purple-400 flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Risk Levels
+                    </h3>
+                    <div className="space-y-3">
+                      <div className="flex items-center">
+                        <span className="w-3 h-3 rounded-full bg-red-500 mr-3"></span>
+                        <div>
+                          <div className="font-medium text-sm">High</div>
+                          <div className="text-gray-400 text-xs">Confirmed malicious activity</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center">
+                        <span className="w-3 h-3 rounded-full bg-orange-500 mr-3"></span>
+                        <div>
+                          <div className="font-medium text-sm">Medium</div>
+                          <div className="text-gray-400 text-xs">Suspicious behavior</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center">
+                        <span className="w-3 h-3 rounded-full bg-yellow-500 mr-3"></span>
+                        <div>
+                          <div className="font-medium text-sm">Low</div>
+                          <div className="text-gray-400 text-xs">Potential risk</div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="flex items-center">
-                      <span className="w-3 h-3 rounded-full bg-orange-500 mr-2"></span>
-                      <span className="font-medium">Medium</span>
-                      <span className="text-gray-400 ml-2">Suspicious behavior</span>
+                  </div>
+                </div>
+
+                <div className="group relative bg-gradient-to-br from-green-900/20 to-green-800/10 rounded-xl p-1 h-48 cursor-pointer">
+                  <div className="absolute inset-0 bg-black/70 rounded-xl group-hover:opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center p-6">
+                    <div className="bg-green-500/20 p-3 rounded-lg mb-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
                     </div>
-                    <div className="flex items-center">
-                      <span className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></span>
-                      <span className="font-medium">Low</span>
-                      <span className="text-gray-400 ml-2">Potential risk</span>
+                    <h3 className="text-lg font-bold text-center mb-2">How to Report</h3>
+                    <p className="text-gray-300 text-center text-sm">Hover for reporting process</p>
+                  </div>
+                  
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-5 flex flex-col justify-center">
+                    <h3 className="text-lg font-bold mb-4 text-green-400 flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                      </svg>
+                      Report Scams
+                    </h3>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-start">
+                        <span className="text-blue-400 mr-2">•</span>
+                        <span>Join our Discord community</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-blue-400 mr-2">•</span>
+                        <span>Submit in #report-scam channel</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-blue-400 mr-2">•</span>
+                        <span>Include contract addresses</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-blue-400 mr-2">•</span>
+                        <span>Our team will review</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <div className="group relative bg-gradient-to-br from-yellow-900/20 to-yellow-800/10 rounded-xl p-1 h-48 cursor-pointer">
+                  <div className="absolute inset-0 bg-black/70 rounded-xl group-hover:opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center p-6">
+                    <div className="bg-yellow-500/20 p-3 rounded-lg mb-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
                     </div>
+                    <h3 className="text-lg font-bold text-center mb-2">Disclaimer</h3>
+                    <p className="text-gray-300 text-center text-sm">Hover for important info</p>
+                  </div>
+                  
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-5 flex flex-col justify-center">
+                    <h3 className="text-lg font-bold mb-4 text-yellow-400 flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Important Notice
+                    </h3>
+                    <ul className="space-y-2 text-sm">
+                      <li className="flex items-start">
+                        <span className="text-red-400 mr-2">•</span>
+                        <span>Always do your own research (DYOR)</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-red-400 mr-2">•</span>
+                        <span>Not financial advice</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-red-400 mr-2">•</span>
+                        <span>Information may not be complete</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-red-400 mr-2">•</span>
+                        <span>Projects may appeal their listing</span>
+                      </li>
+                    </ul>
                   </div>
                 </div>
               </div>
