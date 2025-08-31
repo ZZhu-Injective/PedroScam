@@ -1247,26 +1247,51 @@
       "signed": "Pedro The Raccoon"
       }
   },
-
-
-
-
-
-
-  
-
-
-
-
-
-{
-  "contractAddress": "inj1cp0xfsqmt4futdfcazrdw7ggxnjvzl6jy87q0j",
-  "metadata": {
-    "name": "Alright Angel Academy",
-    "address_created": "inj1pesccff872zhtu69sa07fuld3kjcd6c4tpdqhz",
-    "total": "888",
-    "images": "public\\scam_images\\alright_angel_academy.jpg",
-    "link": "https://injective.talis.art/collection/65f078d139346aa360b10171?from=collection",
-    "reason": "They are never active"
-  }
-}]
+  {
+    "contractAddress": "inj1evlu93k8afsg4nyhhq8n29vg3zfmegfh5xv6e8",
+    "metadata": {
+      "name": "MAVEN NINJAS",
+      "address_created": "inj1mcqlyjmh3x68uhy8jvpwj3458x2g77wuzr9cux",
+      "total": "217",
+      "images": "public\\scam_images\\maven_ninjas.jpg",
+      "link": "https://injective.talis.art/collection/6699fdf38c006610bad4ae7b",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj1u7zn0ttex4j4k3z058l4py8ujuy9yczjf73zzh",
+    "metadata": {
+      "name": "Space Apeboy",
+      "address_created": "inj1amhkvwlwlalkwa9kd7rss0d0ekwjhp5xxdpx65",
+      "total": "21",
+      "images": "public\\scam_images\\space_apeboy.jpg",
+      "link": "https://injective.talis.art/collection/66c94ac2e9e1ae7ce5d1b39b",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj1amec49drqycl90chlj37fu9q4axsad48akmhum",
+    "metadata": {
+      "name": "Off-Titans",
+      "address_created": "inj1qws89snrrvutz4rgfp3auxfezrhv8k0c7nks6v",
+      "total": "1835",
+      "images": "public\\scam_images\\off_titans.jpg",
+      "link": "https://injective.talis.art/collection/670b08a28fec64f44fbda3cb",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  },
+  {
+    "contractAddress": "inj1d7tm30zj4dkt95h9m8t2fjpjqlt24aw03246qf",
+    "metadata": {
+      "name": "INJECTRIX",
+      "address_created": "inj1p74hp4ph0nssfxgkgel7h786lnjn3sat57ycj6",
+      "total": "533",
+      "images": "public\\scam_images\\injectrix.jpg",
+      "link": "https://injective.talis.art/collection/674eba69f2223c5935e817e4",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro The Raccoon"
+      }
+  }]
