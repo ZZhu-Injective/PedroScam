@@ -1,117 +1,23 @@
 'use client';
 import { motion } from "framer-motion";
 import Head from "next/head";
-import { useState } from 'react';
 import Image from "next/image";
-
-type FormData = {
-  projectName: string;
-  projectUrl: string;
-  contractAddress: string;
-  description: string;
-  evidence: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  reporterEmail?: string;
-  socialLinks?: string;
-  agreeTerms: boolean;
-};
+import { useState } from 'react';
 
 export default function ReportScamPage() {
-  const [formData, setFormData] = useState<FormData>({
-    projectName: '',
-    projectUrl: '',
-    contractAddress: '',
-    description: '',
-    evidence: '',
-    severity: 'medium',
-    agreeTerms: false
-  });
-  
-  const [errors, setErrors] = useState<Partial<FormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    const { name, value, type } = e.target;
-    const checked = type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
-    
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
-  };
-
-  const validateForm = () => {
-    const newErrors: Partial<FormData> = {};
-    
-    if (!formData.projectName.trim()) {
-      newErrors.projectName = 'Project name is required';
-    }
-    
-    if (!formData.contractAddress.trim()) {
-      newErrors.contractAddress = 'Contract address is required';
-    } else if (!/^(inj1|0x)[a-zA-Z0-9]+$/.test(formData.contractAddress)) {
-      newErrors.contractAddress = 'Please enter a valid Injective address (inj1...) or EVM address (0x...)';
-    }
-    
-    if (!formData.description.trim()) {
-      newErrors.description = 'Description is required';
-    } else if (formData.description.length < 50) {
-      newErrors.description = 'Please provide at least 50 characters of details';
-    }
-    
-    if (!formData.evidence.trim()) {
-      newErrors.evidence = 'Evidence is required';
-    } else if (formData.evidence.length < 30) {
-      newErrors.evidence = 'Please provide at least 30 characters of evidence';
-    }
-    
-    if (!formData.agreeTerms) {
-      newErrors.agreeTerms = true;
-    }
-    
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) return;
-    
+  const handleDiscordRedirect = () => {
     setIsSubmitting(true);
+    // Open Discord in a new tab
+    window.open('https://discord.gg/your-pedro-server-invite', '_blank');
     
-    try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      console.log('Form submitted:', { ...formData, attachments: selectedFiles });
+    // Simulate submission process
+    setTimeout(() => {
       setSubmitSuccess(true);
-      setFormData({
-        projectName: '',
-        projectUrl: '',
-        contractAddress: '',
-        description: '',
-        evidence: '',
-        severity: 'medium',
-        agreeTerms: false
-      });
-      setSelectedFiles([]);
-    } catch (error) {
-      console.error('Submission error:', error);
-    } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setSelectedFiles(Array.from(e.target.files));
-    }
-  };
-
-  const removeFile = (index: number) => {
-    setSelectedFiles(prev => prev.filter((_, i) => i !== index));
+    }, 2000);
   };
 
   return (
@@ -137,20 +43,46 @@ export default function ReportScamPage() {
           </div>
         </div>
 
-        <section className="px-4 max-w-3xl mx-auto pb-16">
+        <section className="flex items-center justify-center pt-10 text-center relative overflow-hidden">
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="px-6 max-w-4xl relative z-10"
+          >
+            <motion.h1
+              className="text-4xl md:text-7xl font-bold mb-8 text-white"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+            >
+              Report Scam
+            </motion.h1>
+            
+            <motion.div
+              initial={{ opacity: 0, scaleX: 0 }}
+              animate={{ opacity: 1, scaleX: 1 }}
+              transition={{ delay: 0.2, duration: 1.2, ease: "circOut" }}
+              className="h-px w-full bg-gradient-to-r from-transparent via-white to-transparent mb-12"
+            />
+          </motion.div>
+        </section>
+
+        <section className="px-4 max-w-[1500px] mx-auto pb-16">
           {submitSuccess ? (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-green-900/20 border border-green-700 rounded-2xl p-8 text-center"
+              className="bg-gray-900/20 border border-gray-700 rounded-2xl p-8 text-center"
             >
-              <h3 className="text-2xl font-bold mb-4 text-green-400">Report Submitted!</h3>
-              <p className="mb-6">Thank you for helping protect the Injective community. Our team will review your submission.</p>
+              <h3 className="text-2xl font-bold mb-4 text-white">Report Submitted!</h3>
+              <p className="mb-4 text-gray-300">Thank you for helping protect the Injective community. Our team will review your submission.</p>
+              <p className="mb-6 text-sm text-gray-400">You can continue the conversation in our Discord server.</p>
               <button
                 onClick={() => setSubmitSuccess(false)}
-                className="px-6 py-2 bg-green-900/50 hover:bg-green-900/70 rounded-xl transition-colors"
+                className="px-6 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl transition-colors text-white"
               >
-                Submit Another Report
+                Back to Report Page
               </button>
             </motion.div>
           ) : (
@@ -159,302 +91,203 @@ export default function ReportScamPage() {
               animate={{ opacity: 1, y: 0 }}
               className="bg-black/50 border border-white/10 rounded-2xl p-6 md:p-8 backdrop-blur-sm"
             >
-              <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Project Name Field */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Project Name *
-                  </label>
-                  <input
-                    name="projectName"
-                    value={formData.projectName}
-                    onChange={handleChange}
-                    type="text"
-                    placeholder="Enter the scam project name"
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-white/50"
-                  />
-                  {errors.projectName && (
-                    <p className="mt-1 text-sm text-red-400">{errors.projectName}</p>
-                  )}
-                </div>
+              <div className="mb-8 text-center">
+                <h2 className="text-3xl font-bold mb-4 text-white">Report a Scam Project</h2>
+                <p className="text-gray-300">
+                  Help protect the Injective community by reporting suspicious projects or scams.
+                </p>
+              </div>
 
-                {/* Project URL Field */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Project Website/URL
-                  </label>
-                  <input
-                    name="projectUrl"
-                    value={formData.projectUrl}
-                    onChange={handleChange}
-                    type="url"
-                    placeholder="https://"
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-white/50"
-                  />
-                </div>
-
-                {/* Contract Address Field */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Contract Address(es) *
-                  </label>
-                  <input
-                    name="contractAddress"
-                    value={formData.contractAddress}
-                    onChange={handleChange}
-                    type="text"
-                    placeholder="inj1... or 0x..."
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-white/50"
-                  />
-                  {errors.contractAddress && (
-                    <p className="mt-1 text-sm text-red-400">{errors.contractAddress}</p>
-                  )}
-                </div>
-
-                {/* Description Field */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Description of the Scam *
-                  </label>
-                  <textarea
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    rows={5}
-                    placeholder="Provide detailed information about why you believe this is a scam..."
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-white/50"
-                  />
-                  {errors.description && (
-                    <p className="mt-1 text-sm text-red-400">{errors.description}</p>
-                  )}
-                </div>
-
-                {/* Evidence Field */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Evidence/Proof *
-                  </label>
-                  <textarea
-                    name="evidence"
-                    value={formData.evidence}
-                    onChange={handleChange}
-                    rows={3}
-                    placeholder="Links to transactions, screenshots, chat logs, etc."
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-white/50"
-                  />
-                  {errors.evidence && (
-                    <p className="mt-1 text-sm text-red-400">{errors.evidence}</p>
-                  )}
-                </div>
-
-                {/* Severity Field */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Severity Level *
-                  </label>
-                  <select
-                    name="severity"
-                    value={formData.severity}
-                    onChange={handleChange}
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-white/50"
-                  >
-                    <option value="low">Low - Suspicious but no confirmed loss</option>
-                    <option value="medium">Medium - Some evidence of malicious intent</option>
-                    <option value="high">High - Confirmed losses or theft</option>
-                    <option value="critical">Critical - Large-scale scam or ongoing attack</option>
-                  </select>
-                </div>
-
-                {/* Attachments Field */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Attachments (Screenshots, Documents)
-                  </label>
-                  <div className="border border-dashed border-white/20 rounded-xl p-4">
-                    <input
-                      type="file"
-                      id="attachments"
-                      multiple
-                      onChange={handleFileChange}
-                      className="hidden"
-                      accept="image/*,.pdf,.doc,.docx"
-                    />
-                    <label
-                      htmlFor="attachments"
-                      className="block text-center cursor-pointer p-4 border border-white/10 rounded-lg hover:bg-white/5 transition-colors"
-                    >
-                      <div className="flex flex-col items-center justify-center">
-                        <svg className="w-8 h-8 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                        </svg>
-                        <span>Click to upload files</span>
-                        <span className="text-xs text-gray-400 mt-1">PNG, JPG, PDF up to 10MB</span>
-                      </div>
-                    </label>
-                  </div>
-                  {selectedFiles.length > 0 && (
-                    <div className="mt-3 space-y-2">
-                      {selectedFiles.map((file, index) => (
-                        <div key={index} className="flex items-center justify-between bg-black/20 px-3 py-2 rounded-lg">
-                          <span className="text-sm truncate max-w-xs">{file.name}</span>
-                          <button 
-                            type="button" 
-                            onClick={() => removeFile(index)}
-                            className="text-red-400 hover:text-red-300"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
-                        </div>
-                      ))}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <div className="group relative bg-gradient-to-br from-gray-900/20 to-gray-800/10 rounded-xl p-1 h-48 cursor-pointer">
+                  <div className="absolute inset-0 bg-black/70 rounded-xl group-hover:opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center p-6">
+                    <div className="bg-gray-700/20 p-3 rounded-lg mb-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
                     </div>
+                    <h3 className="text-lg font-bold text-center mb-2 text-white">Submission Process</h3>
+                    <p className="text-gray-400 text-center text-sm">Hover for details</p>
+                  </div>
+                  
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-5 flex flex-col justify-center">
+                    <h3 className="text-lg font-bold mb-4 text-white flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                      </svg>
+                      How to Report
+                    </h3>
+                    <ol className="list-decimal list-inside space-y-2 text-sm text-gray-300">
+                      <li>Click the Discord button below</li>
+                      <li>Join our server</li>
+                      <li>Navigate to #report-scam channel</li>
+                      <li>Use the form to submit your report</li>
+                    </ol>
+                  </div>
+                </div>
+
+                <div className="group relative bg-gradient-to-br from-gray-900/20 to-gray-800/10 rounded-xl p-1 h-48 cursor-pointer">
+                  <div className="absolute inset-0 bg-black/70 rounded-xl group-hover:opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center p-6">
+                    <div className="bg-gray-700/20 p-3 rounded-lg mb-4">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-lg font-bold text-center mb-2 text-white">What to Include</h3>
+                    <p className="text-gray-400 text-center text-sm">Hover for details</p>
+                  </div>
+                  
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-5 flex flex-col justify-center">
+                    <h3 className="text-lg font-bold mb-4 text-white flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Evidence Needed
+                    </h3>
+                    <ul className="space-y-2 text-sm text-gray-300">
+                      <li className="flex items-start">
+                        <span className="text-white mr-2 mt-1 text-xs">✓</span>
+                        <span>Contract addresses</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-white mr-2 mt-1 text-xs">✓</span>
+                        <span>Transaction hashes</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-white mr-2 mt-1 text-xs">✓</span>
+                        <span>Screenshots</span>
+                      </li>
+                      <li className="flex items-start">
+                        <span className="text-white mr-2 mt-1 text-xs">✓</span>
+                        <span>Project details</span>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-center">
+                <button
+                  onClick={handleDiscordRedirect}
+                  disabled={isSubmitting}
+                  className={`px-8 py-4 rounded-xl font-medium text-lg flex items-center justify-center mx-auto ${
+                    isSubmitting 
+                      ? 'bg-gray-700 cursor-not-allowed' 
+                      : 'bg-white hover:bg-gray-200 text-black'
+                  } transition-colors`}
+                >
+                  {isSubmitting ? (
+                    <span className="flex items-center justify-center">
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Redirecting to Discord...
+                    </span>
+                  ) : (
+                    <span className="flex items-center">
+                      <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.17.33.26c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
+                      </svg>
+                      Submit Report via Discord
+                    </span>
                   )}
-                </div>
+                </button>
 
-                {/* Email Field */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Your Email (Optional)
-                  </label>
-                  <input
-                    name="reporterEmail"
-                    value={formData.reporterEmail || ''}
-                    onChange={handleChange}
-                    type="email"
-                    placeholder="email@example.com"
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-white/50"
-                  />
-                  <p className="mt-1 text-xs text-gray-400">
-                    Only needed if you want updates about this report
-                  </p>
-                </div>
-
-                {/* Social Links Field */}
-                <div>
-                  <label className="block text-sm font-medium mb-2">
-                    Social Links (Twitter, Telegram, etc.)
-                  </label>
-                  <input
-                    name="socialLinks"
-                    value={formData.socialLinks || ''}
-                    onChange={handleChange}
-                    type="text"
-                    placeholder="https://twitter.com/..."
-                    className="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-1 focus:ring-white/50"
-                  />
-                </div>
-
-                {/* Terms Checkbox */}
-                <div className="flex items-start">
-                  <div className="flex items-center h-5">
-                    <input
-                      name="agreeTerms"
-                      checked={formData.agreeTerms}
-                      onChange={handleChange}
-                      type="checkbox"
-                      className="w-4 h-4 rounded bg-black/30 border border-white/10 focus:ring-white/50"
-                    />
-                  </div>
-                  <div className="ml-3 text-sm">
-                    <label className="text-gray-300">
-                      I confirm that the information provided is accurate to the best of my knowledge and agree to the{' '}
-                      <a href="#" className="text-purple-400 hover:underline">submission terms</a>.
-                    </label>
-                  </div>
-                </div>
-                {errors.agreeTerms && (
-                  <p className="mt-1 text-sm text-red-400">You must agree to the terms</p>
-                )}
-
-                {/* Submit Button */}
-                <div className="pt-4">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className={`w-full px-6 py-4 rounded-xl font-medium text-lg ${
-                      isSubmitting 
-                        ? 'bg-white/50 cursor-not-allowed' 
-                        : 'bg-white hover:bg-white/90 text-black'
-                    } transition-colors`}
-                  >
-                    {isSubmitting ? (
-                      <span className="flex items-center justify-center">
-                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Submitting...
-                      </span>
-                    ) : (
-                      'Submit Report'
-                    )}
-                  </button>
-                </div>
-              </form>
+                <p className="mt-6 text-sm text-gray-400">
+                  Don't have Discord? <a href="https://discord.com/download" className="text-white hover:underline">Download it here</a>
+                </p>
+              </div>
             </motion.div>
           )}
         </section>
 
-          <section className="px-4 max-w-3xl mx-auto pb-16">
-            <div className="bg-black/50 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
-              <h2 className="text-2xl font-bold mb-6">What to Report</h2>
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-bold mb-3 text-red-400">Common Scam Types</h3>
-                  <ul className="space-y-2">
-                    <li className="flex items-start">
-                      <span className="text-red-400 mr-2">•</span>
-                      <span>Rug pulls (projects that suddenly disappear with funds)</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-red-400 mr-2">•</span>
-                      <span>Phishing sites impersonating legitimate projects</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-red-400 mr-2">•</span>
-                      <span>Malicious smart contracts with hidden functions</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-red-400 mr-2">•</span>
-                      <span>Fake airdrops or token giveaways</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-red-400 mr-2">•</span>
-                      <span>Ponzi schemes or unsustainable yield promises</span>
-                    </li>
-                  </ul>
-                </div>
+        <section className="px-4 max-w-[1500px] mx-auto pb-16">
+          <div className="bg-black/50 border border-white/10 rounded-2xl p-8 backdrop-blur-sm">
+            <h2 className="text-2xl font-bold mb-8 text-center text-white">What to Report</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div>
+                <h3 className="text-lg font-bold mb-4 text-white flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                  </svg>
+                  Common Scam Types
+                </h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+                    <span className="text-white mr-3 mt-0.5">•</span>
+                    <span className="text-gray-300">Rug pulls (projects that suddenly disappear with funds)</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+                    <span className="text-white mr-3 mt-0.5">•</span>
+                    <span className="text-gray-300">Phishing sites impersonating legitimate projects</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+                    <span className="text-white mr-3 mt-0.5">•</span>
+                    <span className="text-gray-300">Malicious smart contracts with hidden functions</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+                    <span className="text-white mr-3 mt-0.5">•</span>
+                    <span className="text-gray-300">Fake airdrops or token giveaways</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+                    <span className="text-white mr-3 mt-0.5">•</span>
+                    <span className="text-gray-300">Ponzi schemes or unsustainable yield promises</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+                    <span className="text-white mr-3 mt-0.5">•</span>
+                    <span className="text-gray-300">Fake KYC requests or impersonation scams</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+                    <span className="text-white mr-3 mt-0.5">•</span>
+                    <span className="text-gray-300">Fake support accounts on social media</span>
+                  </li>
+                </ul>
+              </div>
 
-                <div>
-                  <h3 className="text-lg font-bold mb-3 text-green-400">How to Provide Good Evidence</h3>
-                  <ul className="space-y-2">
-                    <li className="flex items-start">
-                      <span className="text-green-400 mr-2">✓</span>
-                      <span>Transaction hashes showing fund movement</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-400 mr-2">✓</span>
-                      <span>Screenshots of suspicious messages or promises</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-400 mr-2">✓</span>
-                      <span>Links to social media posts or websites</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-400 mr-2">✓</span>
-                      <span>Contract addresses and verification links</span>
-                    </li>
-                    <li className="flex items-start">
-                      <span className="text-green-400 mr-2">✓</span>
-                      <span>Detailed description of your experience</span>
-                    </li>
-                  </ul>
-                </div>
+              <div>
+                <h3 className="text-lg font-bold mb-4 text-white flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                  How to Provide Good Evidence
+                </h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+                    <span className="text-white mr-3 mt-0.5">✓</span>
+                    <span className="text-gray-300">Transaction hashes showing fund movement</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+                    <span className="text-white mr-3 mt-0.5">✓</span>
+                    <span className="text-gray-300">Screenshots of suspicious messages or promises</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+                    <span className="text-white mr-3 mt-0.5">✓</span>
+                    <span className="text-gray-300">Links to social media posts or websites</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+                    <span className="text-white mr-3 mt-0.5">✓</span>
+                    <span className="text-gray-300">Contract addresses and verification links</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+                    <span className="text-white mr-3 mt-0.5">✓</span>
+                    <span className="text-gray-300">Detailed description of your experience</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+                    <span className="text-white mr-3 mt-0.5">✓</span>
+                    <span className="text-gray-300">Wallet addresses involved in the scam</span>
+                  </li>
+                  <li className="flex items-start p-3 bg-gray-900/50 rounded-lg border border-gray-700">
+                    <span className="text-white mr-3 mt-0.5">✓</span>
+                    <span className="text-gray-300">Timeline of events with approximate dates</span>
+                  </li>
+                </ul>
               </div>
             </div>
-          </section>
-        </div>
+          </div>
+        </section>
+      </div>
     </>
   );
 }
