@@ -4,10 +4,8 @@ import Head from "next/head";
 import Image from "next/image";
 import { useState, useEffect } from 'react';
 
-// Import JSON data directly
 import nftData from '@/app/scam/nft.json';
 
-// Define the new interface based on your JSON structure
 interface ScamProject {
   contractAddress: string;
   metadata: {
@@ -22,7 +20,6 @@ interface ScamProject {
   };
 }
 
-// Define socials interface
 interface Socials {
   twitter?: string;
   telegram?: string;
@@ -30,14 +27,24 @@ interface Socials {
 }
 
 const mapToLegacyStructure = (project: ScamProject, category: string) => {
-  const imagePath = project.metadata.images.replace(/\\/g, '/');
-  const cleanPath = imagePath.replace(/^public\//, '');
-  const imageName = cleanPath.split('/').pop() || 'default.jpg';
+  // Handle the image path conversion
+  let imageUrl = '/default.jpg'; // fallback image
+  
+  if (project.metadata.images) {
+    // Clean up the path - replace backslashes with forward slashes
+    const cleanPath = project.metadata.images.replace(/\\/g, '/');
+    
+    // Remove 'public/' prefix if it exists
+    const pathWithoutPublic = cleanPath.replace(/^public\//, '');
+    
+    // Use the cleaned path directly
+    imageUrl = `/${pathWithoutPublic}`;
+  }
   
   return {
     id: project.contractAddress,
     name: project.metadata.name,
-    imageUrl: `/${cleanPath}`,
+    imageUrl: imageUrl,
     category: category,
     dateReported: "Unknown",
     reportedBy: project.metadata.signed,
@@ -242,7 +249,6 @@ export default function ScamProjectsPage() {
           }
         });
         
-        // If no data was loaded, use fallback data
         if (allProjects.length === 0) {
           console.log("Using fallback data");
           const fallbackData: ScamProject[] = [

@@ -305,7 +305,7 @@
       "name": ".monkes",
       "address_created": "inj1g86wkwgrk5s9wlpjxtxksa0u2jetvk88cperv4",
       "total": "997",
-      "images": "public/scam_images/.monkes.jpg",
+      "images": "public\\scam_images\\.monkes.jpg",
       "link": "https://injective.talis.art/collection/65836f20757a8ae4de19e7e0",
       "reason": "No visible buzz on social platforms, not active anymore.",
       "signed": "Pedro Team"
