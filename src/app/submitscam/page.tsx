@@ -10,10 +10,8 @@ export default function ReportScamPage() {
 
   const handleDiscordRedirect = () => {
     setIsSubmitting(true);
-    // Open Discord in a new tab
     window.open('https://discord.gg/your-pedro-server-invite', '_blank');
     
-    // Simulate submission process
     setTimeout(() => {
       setSubmitSuccess(true);
       setIsSubmitting(false);

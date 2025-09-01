@@ -36,6 +36,18 @@
       }
   },
   {
+    "contractAddress": "inj1tydmep5lmkh04w4tss53zvd0g69tac64rnkpdl",
+    "metadata": {
+      "name": "Bad Ninja",
+      "address_created": "inj1elmjgyz4t5kc8rmp47u7wf58tmafy6hjh39jqw",
+      "total": "2153",
+      "images": "public\\scam_images\\bad_ninja.jpg",
+      "link": "https://injective.talis.art/collection/64c978692f9f2507b6aa393d",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro Team"
+      }
+  },
+  {
     "contractAddress": "inj1krph8w9d9ep289yh7pcuk7gd587a693g340vyj",
     "metadata": {
       "name": "Injective Skeletons",
@@ -125,7 +137,7 @@
       "name": "Apective",
       "address_created": "inj1z7wkcakdkacd9m2xdret5v4ktx760hfugn007z",
       "total": "551",
-      "images": "public\\scam_images\\appective.jpg",
+      "images": "public\\scam_images\\apective.jpg",
       "link": "https://injective.talis.art/collection/6523a99671d8326af193c004",
       "reason": "No visible buzz on social platforms, not active anymore.",
       "signed": "Pedro Team"
@@ -305,7 +317,7 @@
       "name": ".monkes",
       "address_created": "inj1g86wkwgrk5s9wlpjxtxksa0u2jetvk88cperv4",
       "total": "997",
-      "images": "public\\scam_images\\.monkes.jpg",
+      "images": "public\\scam_images\\monkes.jpg",
       "link": "https://injective.talis.art/collection/65836f20757a8ae4de19e7e0",
       "reason": "No visible buzz on social platforms, not active anymore.",
       "signed": "Pedro Team"

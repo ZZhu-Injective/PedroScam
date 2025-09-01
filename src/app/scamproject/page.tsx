@@ -31,14 +31,21 @@ const mapToLegacyStructure = (project: ScamProject, category: string) => {
   let imageUrl = '/default.jpg'; // fallback image
   
   if (project.metadata.images) {
+    console.log('=== DEBUG IMAGE PATH ===');
+    console.log('Original image path:', project.metadata.images);
+    
     // Clean up the path - replace backslashes with forward slashes
     const cleanPath = project.metadata.images.replace(/\\/g, '/');
+    console.log('After backslash replacement:', cleanPath);
     
     // Remove 'public/' prefix if it exists
     const pathWithoutPublic = cleanPath.replace(/^public\//, '');
+    console.log('After public removal:', pathWithoutPublic);
     
     // Use the cleaned path directly
     imageUrl = `/${pathWithoutPublic}`;
+    console.log('Final image URL:', imageUrl);
+    console.log('=======================');
   }
   
   return {
@@ -47,7 +54,7 @@ const mapToLegacyStructure = (project: ScamProject, category: string) => {
     imageUrl: imageUrl,
     category: category,
     dateReported: "Unknown",
-    reportedBy: project.metadata.signed,
+    reportedBy: project.metadata.signed || "Unknown",
     description: project.metadata.reason,
     severity: project.metadata.risk || 'high', 
     website: project.metadata.link,
@@ -599,7 +606,7 @@ export default function ScamProjectsPage() {
             </div>
 
             <motion.div 
-              key={displayedProjects.length} // This forces re-animation when projects change
+              key={displayedProjects.length}
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.3 }}
