@@ -180,6 +180,18 @@
       }
   },
   {
+    "contractAddress": "inj14a0l5ser0t5j5rmxxk6tch22mpzs06z7kys85r",
+    "metadata": {
+      "name": "DWEEDS",
+      "address_created": "inj1g5xv20j9yt3cx0xshcsvyqju2rdlpurcup7afz",
+      "total": "179",
+      "images": "public\\scam_images\\dweeds.jpg",
+      "link": "https://injective.talis.art/collection/653cc77c573da697ca3a979b",
+      "reason": "No visible buzz on social platforms, not active anymore.",
+      "signed": "Pedro Team"
+      }
+  },
+  {
     "contractAddress": "inj1vcqgnzjx9g5c7jfkphcq66nw8cgksftg29vf0r",
     "metadata": {
       "name": "Alpha Bulls",
