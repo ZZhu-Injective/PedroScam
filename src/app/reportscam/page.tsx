@@ -255,7 +255,7 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
                   {cardData.map((card) => (
                     <motion.div 
                       key={card.id}
-                      className="group relative bg-gradient-to-br from-gray-900/20 to-gray-800/10 rounded-xl p-1 h-48 cursor-pointer border border-gray-700/30"
+                      className="group relative bg-gradient-to-br from-gray-900/10 to-gray-800/10 rounded-xl p-1 h-48 cursor-pointer border border-gray-700/30"
                       whileHover={{ y: -5 }}
                       onHoverStart={() => setActiveCard(card.id)}
                       onHoverEnd={() => setActiveCard(null)}
@@ -368,7 +368,7 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
                     className={`px-8 py-4 rounded-xl font-medium text-lg flex items-center justify-center mx-auto ${
                       isSubmitting 
                         ? 'bg-gray-700 cursor-not-allowed' 
-                        : 'bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white shadow-lg'
+                        : 'bg-black/70 border border-white/20 rounded-xl px-4 py-3 text-white hover:bg-white/10 transition-colors'
                     } transition-all duration-300`}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
