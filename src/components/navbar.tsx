@@ -127,7 +127,7 @@ const Navbar = () => {
             {[
               { href: "/scanaddress", label: "SCAN ADDRESS" },
               { href: "/scamproject", label: "SCAM PROJECT" },
-              { href: "/submitscam", label: "SUBMIT SCAM" },
+              { href: "/reportscam", label: "REPORT SCAM" },
               { href: "https://injectivepedro.com/", label: "MAIN" },
             ].map((item) => (
               <li
