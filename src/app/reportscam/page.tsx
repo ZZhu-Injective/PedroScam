@@ -11,7 +11,7 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
 
   const handleDiscordRedirect = () => {
     setIsSubmitting(true);
-    window.open('https://discord.gg/your-pedro-server-invite', '_blank');
+    window.open('https://discord.gg/ZyaZpCXVrP', '_blank');
     
     setTimeout(() => {
       setSubmitSuccess(true);
@@ -200,38 +200,6 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
           </motion.div>
         </section>
 
-        <section className="py-4 px-4 max-w-[1500px] mx-auto relative z-10">
-          <div className="bg-black/70 border border-white/20 rounded-2xl p-6 backdrop-blur-sm">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {cardData.map((card) => (
-                <motion.div 
-                  key={card.id}
-                  className="group relative bg-gradient-to-br from-gray-900/20 to-gray-800/10 rounded-xl p-1 h-48 cursor-pointer border border-gray-700/30"
-                  whileHover={{ y: -5 }}
-                  onHoverStart={() => setActiveCard(card.id)}
-                  onHoverEnd={() => setActiveCard(null)}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 to-gray-800/50 rounded-xl group-hover:opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center p-6">
-                    <div className="bg-white/10 p-3 rounded-lg mb-4 backdrop-blur-sm">
-                      {card.icon}
-                    </div>
-                    <h3 className="text-lg font-bold text-center mb-2">{card.title}</h3>
-                    <p className="text-gray-400 text-center text-sm">{card.description}</p>
-                  </div>
-                  
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-5 flex flex-col justify-center">
-                    <h3 className="text-lg font-bold mb-4 text-white flex items-center">
-                      {card.icon}
-                      <span className="ml-2">{card.hoverTitle}</span>
-                    </h3>
-                    {card.content}
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         <section className="px-4 max-w-[1500px] mx-auto pb-16 relative z-10">
           <AnimatePresence mode="wait">
             {submitSuccess ? (
@@ -252,8 +220,8 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </motion.div>
-                <h3 className="text-2xl font-bold mb-4 text-white">Report Submitted!</h3>
-                <p className="mb-4 text-gray-300">Thank you for helping protect the Injective community. Our team will review your submission.</p>
+                <h3 className="text-2xl font-bold mb-4 text-white">Check Pedro Discord Server!</h3>
+                <p className="mb-4 text-gray-300">Thank you for helping to protect the Injective community.</p>
                 <p className="mb-6 text-sm text-gray-400">You can continue the conversation in our Discord server.</p>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -261,7 +229,7 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
                   onClick={() => setSubmitSuccess(false)}
                   className="px-6 py-2 bg-gray-800 hover:bg-gray-700 rounded-xl transition-colors text-white border border-gray-600"
                 >
-                  Back to Report Page
+                  Back
                 </motion.button>
               </motion.div>
             ) : (
@@ -273,22 +241,42 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
                 className="bg-gradient-to-br from-black/70 to-gray-900/70 border border-white/20 rounded-2xl p-6 md:p-8 backdrop-blur-sm"
               >
                 <div className="mb-8 text-center">
-                  <motion.h2 
-                    className="text-3xl font-bold mb-4 text-white"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.2 }}
-                  >
-                    Report a Scam Project
-                  </motion.h2>
                   <motion.p 
-                    className="text-gray-300 max-w-2xl mx-auto"
+                    className="text-gray-300 max-w-[1500px] mx-auto"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.3 }}
                   >
                     Help protect the Injective community by reporting suspicious projects or scams.
                   </motion.p>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  {cardData.map((card) => (
+                    <motion.div 
+                      key={card.id}
+                      className="group relative bg-gradient-to-br from-gray-900/20 to-gray-800/10 rounded-xl p-1 h-48 cursor-pointer border border-gray-700/30"
+                      whileHover={{ y: -5 }}
+                      onHoverStart={() => setActiveCard(card.id)}
+                      onHoverEnd={() => setActiveCard(null)}
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 to-gray-800/50 rounded-xl group-hover:opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center p-6">
+                        <div className="bg-white/10 p-3 rounded-lg mb-4 backdrop-blur-sm">
+                          {card.icon}
+                        </div>
+                        <h3 className="text-lg font-bold text-center mb-2">{card.title}</h3>
+                        <p className="text-gray-400 text-center text-sm">{card.description}</p>
+                      </div>
+                      
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-5 flex flex-col justify-center">
+                        <h3 className="text-lg font-bold mb-4 text-white flex items-center">
+                          {card.icon}
+                          <span className="ml-2">{card.hoverTitle}</span>
+                        </h3>
+                        {card.content}
+                      </div>
+                    </motion.div>
+                  ))}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -403,15 +391,6 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
                       </span>
                     )}
                   </motion.button>
-
-                  <motion.p 
-                    className="mt-6 text-sm text-gray-400"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.7 }}
-                  >
-                    Don't have Discord? <a href="https://discord.com/download" className="text-blue-400 hover:underline">Download it here</a>
-                  </motion.p>
                 </div>
               </motion.div>
             )}
