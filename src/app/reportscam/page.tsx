@@ -2,12 +2,48 @@
 import { motion, AnimatePresence } from "framer-motion";
 import Head from "next/head";
 import Image from "next/image";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function ReportScamPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
-const [activeCard, setActiveCard] = useState<number | null>(null);
+  const [activeCard, setActiveCard] = useState<number | null>(null);
+  const [raccoonIndex, setRaccoonIndex] = useState(0);
+  const [isHoveringRaccoon, setIsHoveringRaccoon] = useState(false);
+  const [imagesPreloaded, setImagesPreloaded] = useState(false);
+
+  // Preload raccoon images using a different approach
+  useEffect(() => {
+    const preloadImages = async () => {
+      const preloadPromises = [];
+      
+      for (let i = 1; i <= 66; i++) {
+        const img = new window.Image();
+        img.src = `/raccoon_mascot/${i}.webp`;
+        const promise = new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve; // Resolve even if there's an error to avoid blocking
+        });
+        preloadPromises.push(promise);
+      }
+      
+      await Promise.all(preloadPromises);
+      setImagesPreloaded(true);
+    };
+    
+    preloadImages();
+  }, []);
+
+  // Cycle through raccoon images
+  useEffect(() => {
+    if (isHoveringRaccoon || !imagesPreloaded) return; // Pause animation when hovering or images not loaded
+    
+    const interval = setInterval(() => {
+      setRaccoonIndex(prev => (prev + 1) % 66);
+    }, 100); // Change image every 100ms for a fast animation
+    
+    return () => clearInterval(interval);
+  }, [isHoveringRaccoon, imagesPreloaded]);
 
   const handleDiscordRedirect = () => {
     setIsSubmitting(true);
@@ -24,7 +60,7 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
       id: 1,
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 极 003 9c0 5.591 3.824 10.29 9 极1.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
         </svg>
       ),
       title: "How We Identify Scams",
@@ -91,7 +127,7 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
       id: 3,
       icon: (
         <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 极 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m极 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
         </svg>
       ),
       title: "How to Report",
@@ -121,7 +157,7 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
     {
       id: 4,
       icon: (
-        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/极000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
@@ -166,14 +202,49 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
             <Image
               src="/wallpaper1.webp"
               alt="Background texture"
-              layout="fill"
-              objectFit="cover"
-              className="opacity-40 mix-blend-overlay"
+              fill
+              className="opacity-40 mix-blend-overlay object-cover"
               priority
             />
           </div>
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80"></div>
         </div>
+
+        {/* Animated Raccoon Mascot */}
+        <motion.div 
+          className="fixed bottom-6 right-6 z-50 cursor-pointer"
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 1, duration: 0.5 }}
+          whileHover={{ scale: 1.1 }}
+          onHoverStart={() => setIsHoveringRaccoon(true)}
+          onHoverEnd={() => setIsHoveringRaccoon(false)}
+        >
+          <div className="relative w-24 h-24 md:w-32 md:h-32">
+            <Image
+              src={`/raccoon_mascot/${raccoonIndex + 1}.webp`}
+              alt="Pedro the Raccoon"
+              fill
+              className="object-contain drop-shadow-lg"
+              priority
+            />
+          </div>
+          
+          {/* Speech bubble that appears on hover */}
+          <AnimatePresence>
+            {isHoveringRaccoon && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                className="absolute bottom-full right-0 mb-2 bg-gray-900/90 backdrop-blur-sm border border-white/20 rounded-xl p-3 w-48 text-sm"
+              >
+                <p className="text-white">Stay safe out there! Report any suspicious activity 🦝</p>
+                <div className="absolute bottom-0 right-4 transform translate-y-1/2 rotate-45 w-3 h-3 bg-gray-900/90 border-r border-b border-white/20"></div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
 
         <section className="flex items-center justify-center pt-10 text-center relative overflow-hidden">
           <motion.div
@@ -208,7 +279,7 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                className="bg-gradient-to-br from-gray-900/70 to-gray-800/50 border border-gray-700 rounded-2xl p-8 text-center backdrop-blur-sm"
+                className="bg-gradient-to-b极 from-gray-900/70 to-gray-800/50 border border-gray-700 rounded-2xl p-8 text-center backdrop-blur-sm"
               >
                 <motion.div 
                   initial={{ scale: 0 }}
@@ -268,7 +339,7 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
                         <p className="text-gray-400 text-center text-sm">{card.description}</p>
                       </div>
                       
-                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-5 flex flex-col justify-center">
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-极00 transition-opacity duration-300 p-5 flex flex-col justify-center">
                         <h3 className="text-lg font-bold mb-4 text-white flex items-center">
                           {card.icon}
                           <span className="ml-2">{card.hoverTitle}</span>
@@ -281,7 +352,7 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                   <motion.div 
-                    className="group relative bg-gradient-to-br from-gray-900/20 to-gray-800/10 rounded-xl p-1 h-48 cursor-pointer border border-gray-700/30"
+                    className="group relative bg-gradient-to-br from-gray-900/20 to-gray-800/10 rounded-xl p-1极-48 cursor-pointer border border-gray-700/30"
                     whileHover={{ y: -5 }}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -289,7 +360,7 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-gray-900/70 to-gray-800/50 rounded-xl group-hover:opacity-0 transition-opacity duration-300 flex flex-col items-center justify-center p-6">
                       <div className="bg-white/10 p-3 rounded-lg mb-4 backdrop-blur-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/s极" className="h-8 w-8 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                         </svg>
                       </div>
@@ -300,7 +371,7 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-5 flex flex-col justify-center">
                       <h3 className="text-lg font-bold mb-4 text-white flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4极5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c极 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                         </svg>
                         How to Report
                       </h3>
@@ -333,7 +404,7 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-5 flex flex-col justify-center">
                       <h3 className="text-lg font-bold mb-4 text-white flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1极1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         Evidence Needed
                       </h3>
@@ -385,7 +456,7 @@ const [activeCard, setActiveCard] = useState<number | null>(null);
                     ) : (
                       <span className="flex items-center">
                         <svg className="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                          <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.1 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.17.33.26c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
+                          <path d="M19.27 5.33C17.94 4.71 16.5 4.26 15 4a.09.09 0 0 0-.07.03c-.18.33-.39.76-.53 1.09a16.09 16.09 0 0 0-4.8 0c-.14-.34-.35-.76-.54-1.09c-.01-.02-.04-.03-.07-.03c-1.5.26-2.93.71-4.27 1.33c-.01 0-.02.01-.03.02c-2.72 4.07-3.47 8.03-3.极 11.95c0 .02.01.04.03.05c1.8 1.32 3.53 2.12 5.24 2.65c.03.01.06 0 .07-.02c.4-.55.76-1.13 1.07-1.74c.02-.04 0-.08-.04-.09c-.57-.22-1.11-.48-1.64-.78c-.04-.02-.04-.08-.01-.11c.11-.08.22-.17.33-.25c.02-.02.05-.02.07-.01c3.44 1.57 7.15 1.57 10.55 0c.02-.01.05-.01.07.01c.11.09.22.17.33.26c.04.03.04.09-.01.11c-.52.31-1.07.56-1.64.78c-.04.01-.05.06-.04.09c.32.61.68 1.19 1.07 1.74c.03.01.06.02.09.01c1.72-.53 3.45-1.33 5.25-2.65c.02-.01.03-.03.03-.05c.44-4.53-.73-8.46-3.1-11.95c-.01-.01-.02-.02-.04-.02zM8.52 14.91c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.84 2.12-1.89 2.12zm6.97 0c-1.03 0-1.89-.95-1.89-2.12s.84-2.12 1.89-2.12c1.06 0 1.9.96 1.89 2.12c0 1.17-.83 2.12-1.89 2.12z"/>
                         </svg>
                         Submit Report via Discord
                       </span>
